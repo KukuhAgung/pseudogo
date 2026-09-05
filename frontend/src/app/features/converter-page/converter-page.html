@@ -1,0 +1,13 @@
+<textarea
+  [ngModel]="pseudocode()"
+  (ngModelChange)="pseudocode.set($event)"
+  rows="15"
+  placeholder="Tulis pseudocode di sini...">
+</textarea>
+@if (errorMessage()) {
+  <p style="color: red">{{ errorMessage() }}</p>
+}
+<button (click)="onConvert()" [disabled]="isLoading()">
+  {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
+</button>
+<pre>{{ goCode() }}</pre>

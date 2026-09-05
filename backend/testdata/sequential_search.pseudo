@@ -1,0 +1,37 @@
+procedure SequentialSearch(in arr : array [1..N] of integer, in N : integer, in X : integer, out idx : integer)
+Kamus:
+    i : integer
+    ketemu : boolean
+Algoritma:
+    i <- 1
+    ketemu <- false
+
+    while (i <= N) and (not ketemu) do
+        if (arr[i] = X) then
+            ketemu <- true
+        else
+            i <- i + 1
+        end if
+    end while
+
+    if (ketemu = true) then
+        idx <- i
+    else
+        idx <- -1
+    end if
+end procedure
+
+Program TestSequentialSearch
+Kamus:
+    data : array [1..5] of integer
+    hasil : integer
+Algoritma:
+    data[1] <- 10
+    data[2] <- 25
+    data[3] <- 7
+    data[4] <- 42
+    data[5] <- 3
+    SequentialSearch(data, 5, 42, hasil)
+    output("Indeks ditemukan (1-based): ", hasil)
+    SequentialSearch(data, 5, 999, hasil)
+    output("Hasil pencarian tidak ada: ", hasil)

@@ -1,0 +1,45 @@
+function CekGenap(angka : integer) -> boolean
+Kamus:
+    hasil : boolean
+Algoritma:
+    if (angka mod 2 = 0) then
+        hasil <- true
+    else
+        hasil <- false
+    end if
+    return hasil
+end function
+
+Program TestMisc
+Kamus:
+    namaMahasiswa : string
+    nilai : integer
+    indeks : char
+    constant PHI : real = 3.14
+    hitungan : integer
+Algoritma:
+    namaMahasiswa <- "Budi"
+    output("Nama mahasiswa: ", namaMahasiswa)
+
+    nilai <- 85
+    if (nilai >= 80) then
+        output("Indeks A")
+    else if (nilai >= 70) then
+        output("Indeks B")
+    else
+        output("Indeks C")
+    end if
+
+    indeks <- 'A'
+    output("Indeks huruf: ", indeks)
+
+    output("Nilai PHI: ", PHI)
+
+    output("6 genap? ", CekGenap(6))
+    output("7 genap? ", CekGenap(7))
+
+    hitungan <- 0
+    repeat
+        hitungan <- hitungan + 1
+        output("Hitungan ke: ", hitungan)
+    until (hitungan = 3)

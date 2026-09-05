@@ -1,0 +1,8 @@
+Program Broken
+Kamus:
+    x : integer
+Algoritma:
+    x <- 5
+    if (x > 3) then
+        output("besar")
+    // lupa end if

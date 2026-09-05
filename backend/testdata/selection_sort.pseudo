@@ -1,0 +1,33 @@
+procedure SelectionSort(inout arr : array [1..N] of integer, in N : integer)
+Kamus:
+    i, j, minIdx, temp : integer
+Algoritma:
+    for i <- 1 to N - 1 do
+        minIdx <- i
+        for j <- i + 1 to N do
+            if (arr[j] < arr[minIdx]) then
+                minIdx <- j
+            end if
+        end for
+
+        temp <- arr[i]
+        arr[i] <- arr[minIdx]
+        arr[minIdx] <- temp
+    end for
+end procedure
+
+Program TestSelectionSort
+Kamus:
+    data : array [1..6] of integer
+    i : integer
+Algoritma:
+    data[1] <- 64
+    data[2] <- 25
+    data[3] <- 12
+    data[4] <- 22
+    data[5] <- 11
+    data[6] <- 90
+    SelectionSort(data, 6)
+    for i <- 1 to 6 do
+        output("data[", i, "] = ", data[i])
+    end for

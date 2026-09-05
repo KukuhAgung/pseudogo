@@ -1,0 +1,41 @@
+procedure BinarySearch(in arr : array [1..N] of integer, in N : integer, in X : integer, out idx : integer)
+Kamus:
+    kiri, kanan, tengah : integer
+    ketemu : boolean
+Algoritma:
+    kiri <- 1
+    kanan <- N
+    ketemu <- false
+    idx <- -1
+
+    while (kiri <= kanan) and (not ketemu) do
+        tengah <- (kiri + kanan) div 2
+
+        if (arr[tengah] = X) then
+            ketemu <- true
+            idx <- tengah
+        else if (arr[tengah] < X) then
+            kiri <- tengah + 1
+        else
+            kanan <- tengah - 1
+        end if
+    end while
+end procedure
+
+Program TestBinarySearch
+Kamus:
+    data : array [1..8] of integer
+    hasil : integer
+Algoritma:
+    data[1] <- 2
+    data[2] <- 5
+    data[3] <- 9
+    data[4] <- 12
+    data[5] <- 17
+    data[6] <- 23
+    data[7] <- 38
+    data[8] <- 45
+    BinarySearch(data, 8, 23, hasil)
+    output("Indeks 23 (1-based): ", hasil)
+    BinarySearch(data, 8, 100, hasil)
+    output("Hasil pencarian tidak ada: ", hasil)

@@ -1,0 +1,22 @@
+procedure HitungLuas(in panjang : integer, in lebar : integer, out luas : integer)
+Kamus:
+Algoritma:
+    luas <- panjang * lebar
+end procedure
+
+Program TestHitungLuas
+Kamus:
+    p, l, hasilLuas : integer
+    nama : string
+    umur : integer
+    inisial : char
+Algoritma:
+    input(p)
+    input(l)
+    HitungLuas(p, l, hasilLuas)
+    output("Luas = ", hasilLuas)
+
+    input(nama)
+    input(umur)
+    input(inisial)
+    output("Halo ", nama, ", umur ", umur, ", inisial ", inisial)

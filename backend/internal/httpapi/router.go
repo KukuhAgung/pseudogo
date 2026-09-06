@@ -5,6 +5,7 @@ import "net/http"
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /convert", ConvertHandler)
+	mux.HandleFunc("POST /run", RunHandler)
 	return withCORS(mux)
 }
 

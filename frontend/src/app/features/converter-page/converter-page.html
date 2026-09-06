@@ -1,13 +1,60 @@
-<textarea
-  [ngModel]="pseudocode()"
-  (ngModelChange)="pseudocode.set($event)"
-  rows="15"
-  placeholder="Tulis pseudocode di sini...">
-</textarea>
-@if (errorMessage()) {
-  <p style="color: red">{{ errorMessage() }}</p>
-}
-<button (click)="onConvert()" [disabled]="isLoading()">
-  {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
-</button>
-<pre>{{ goCode() }}</pre>
+<app-code-editor [(value)]="pseudocode"></app-code-editor>
+
+<!-- Bagian Convert -->
+<div class="mt-4 p-4 border border-gray-300 rounded">
+  <h2 class="font-semibold mb-2">Convert ke Go</h2>
+  <button
+    (click)="onConvert()"
+    [disabled]="isLoading()"
+    class="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
+    {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
+  </button>
+
+  @if (errorMessage()) {
+    <p class="text-red-600 mt-2">{{ errorMessage() }}</p>
+  }
+  @if (goCode()) {
+    <pre class="mt-2 bg-gray-100 p-2 rounded overflow-auto text-sm">{{ goCode() }}</pre>
+  }
+</div>
+
+<!-- Bagian Run -->
+<div class="mt-4 p-4 border border-gray-300 rounded">
+  <h2 class="font-semibold mb-2">Run (jalankan program)</h2>
+
+  <label class="block text-sm mb-1">Input program (opsional) — satu nilai per baris, sesuai urutan input():</label>
+  <textarea
+    [ngModel]="stdinInput()"
+    (ngModelChange)="stdinInput.set($event)"
+    rows="3"
+    placeholder="Contoh:&#10;Budi"
+    class="w-full border border-gray-300 rounded p-2 mb-2">
+  </textarea>
+
+  <button
+    (click)="onRun()"
+    [disabled]="isRunning()"
+    class="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50">
+    {{ isRunning() ? 'Menjalankan...' : 'Run' }}
+  </button>
+
+  @if (isRunning()) {
+    <p class="mt-2 text-gray-600">⏳ Meng-compile &amp; menjalankan kode — biasanya 15–20 detik...</p>
+  }
+  @if (runError()) {
+    <p class="text-red-600 mt-2">{{ runError() }}</p>
+  }
+  @if (runOutput() || runStderr()) {
+    <div class="mt-2">
+      <h3 class="font-semibold">Output program</h3>
+      <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm">{{ runOutput() }}</pre>
+      @if (runStderr()) {
+        <h3 class="font-semibold text-orange-600 mt-2">stderr</h3>
+        <pre class="bg-orange-50 p-2 rounded overflow-auto text-sm">{{ runStderr() }}</pre>
+      }
+      @if (runTimedOut()) {
+        <p class="text-red-600 mt-2">⚠️ Melebihi batas waktu (kemungkinan infinite loop)</p>
+      }
+    </div>
+  }
+</div>

@@ -1,5 +1,9 @@
 package lexer
 
+import (
+	"strings"
+)
+
 type TokenType int
 
 const (
@@ -68,49 +72,52 @@ const (
 	GT         // >
 	LE         // <=
 	GE         // >=
+
+	ENDPROGRAM
 )
 
 var keywords = map[string]TokenType{
-	"Program":   PROGRAM,
-	"Kamus":     KAMUS,
-	"Algoritma": ALGORITMA,
-	"constant":  CONSTANT,
-	"integer":   KW_INTEGER,
-	"real":      KW_REAL,
-	"boolean":   KW_BOOLEAN,
-	"char":      KW_CHAR,
-	"string":    KW_STRING,
-	"array":     ARRAY,
-	"of":        OF,
-	"input":     INPUT,
-	"output":    OUTPUT,
-	"if":        IF,
-	"then":      THEN,
-	"else":      ELSE,
-	"end":       END,
-	"for":       FOR,
-	"to":        TO,
-	"do":        DO,
-	"while":     WHILE,
-	"until":     UNTIL,
-	"repeat":    REPEAT,
-	"procedure": PROCEDURE,
-	"function":  FUNCTION,
-	"return":    RETURN,
-	"in":        IN,
-	"out":       OUT,
-	"inout":     INOUT,
-	"and":       AND,
-	"or":        OR,
-	"not":       NOT,
-	"div":       DIV,
-	"mod":       MOD,
-	"true":      TRUE,
-	"false":     FALSE,
+	"program":    PROGRAM,
+	"endprogram": ENDPROGRAM,
+	"kamus":      KAMUS,
+	"algoritma":  ALGORITMA,
+	"constant":   CONSTANT,
+	"integer":    KW_INTEGER,
+	"real":       KW_REAL,
+	"boolean":    KW_BOOLEAN,
+	"char":       KW_CHAR,
+	"string":     KW_STRING,
+	"array":      ARRAY,
+	"of":         OF,
+	"input":      INPUT,
+	"output":     OUTPUT,
+	"if":         IF,
+	"then":       THEN,
+	"else":       ELSE,
+	"end":        END,
+	"for":        FOR,
+	"to":         TO,
+	"do":         DO,
+	"while":      WHILE,
+	"until":      UNTIL,
+	"repeat":     REPEAT,
+	"procedure":  PROCEDURE,
+	"function":   FUNCTION,
+	"return":     RETURN,
+	"in":         IN,
+	"out":        OUT,
+	"inout":      INOUT,
+	"and":        AND,
+	"or":         OR,
+	"not":        NOT,
+	"div":        DIV,
+	"mod":        MOD,
+	"true":       TRUE,
+	"false":      FALSE,
 }
 
 func LookupIdent(ident string) TokenType {
-	if tok, ok := keywords[ident]; ok {
+	if tok, ok := keywords[strings.ToLower(ident)]; ok {
 		return tok
 	}
 	return IDENT

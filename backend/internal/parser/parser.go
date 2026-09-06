@@ -36,7 +36,7 @@ func Parse(src, filename string) (*ast.File, error) {
 	return p.parseFile()
 }
 
-func (p *Parser) cur() lexer.Token  { return p.toks[p.pos] }
+func (p *Parser) cur() lexer.Token { return p.toks[p.pos] }
 func (p *Parser) peekN(n int) lexer.Token {
 	if p.pos+n >= len(p.toks) {
 		return p.toks[len(p.toks)-1]
@@ -152,6 +152,9 @@ func (p *Parser) parseProgram() (*ast.Program, error) {
 	body, err := p.parseStmtList()
 	if err != nil {
 		return nil, err
+	}
+	if p.cur().Type == lexer.ENDPROGRAM {
+		p.advance()
 	}
 	return &ast.Program{Name: nameTok.Literal, Kamus: decls, Body: body}, nil
 }

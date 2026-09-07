@@ -1,17 +1,34 @@
 <section class="h-screen flex flex-col items-center relative overflow-hidden">
-  <nav class="w-full flex items-center justify-between p-4 border-b border-slate-400">
-    <h1 class="text-xl font-bold">PseudoGO</h1>
-    <div class="menu flex items-center p-2 gap-4">
-      <h6>kamus</h6>
-      <button>baca file</button>
-      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
-      <button>darkmode</button>
-      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
-      <button (click)="toggleSidebar()" class="relative px-2">
-        Log
-        @if (hasUnreadLog()) {
-          <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+  <nav class="w-full flex items-center justify-between p-4 border-b border-gray-300">
+    <div class="flex items-center gap-4">
+      <a class="cursor-pointer flex items-center gap-2 px-3 py-2 text-sub hover:bg-bg-weak shrink-0 justify-center rounded-lg border border-gray-400">
+         <ng-icon name="remixBookOpenLine" color="#6a7282"/>
+        <span class="text-sm whitespace-nowrap text-gray-500 font-medium">Kamus</span>
+      </a>
+       <a class="cursor-pointer flex items-center gap-2 px-3 py-2 text-sub hover:bg-bg-weak shrink-0 justify-center rounded-lg border border-gray-400">
+         <ng-icon name="remixUploadLine" color="#6a7282"/>
+        <span class="text-sm whitespace-nowrap text-gray-500 font-medium">Upload</span>
+      </a>
+    </div>
+    <div class="flex items-center p-2 gap-4">
+      <button (click)="toggleDarkMode()"
+        class="cursor-pointer border-line text-sub hover:bg-bg-weak flex size-8.5 shrink-0 items-center justify-center rounded-[10px] border border-gray-400"
+      >
+        @if(isDarkMode){
+          <ng-icon name="remixSunLine" />
+        }@else{
+          <ng-icon name="remixMoonLine" />
         }
+      </button>
+      <div class="w-px h-3 bg-slate-400 rounded-full"></div>
+      <button
+        class="cursor-pointer border-line text-sub hover:bg-bg-weak flex size-8.5 shrink-0 items-center justify-center rounded-md border border-gray-400"
+      >
+        <ng-icon (click)="toggleSidebar()" name="remixTerminalFill">
+          @if (hasUnreadLog()) {
+            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+          }
+        </ng-icon>
       </button>
     </div>
   </nav>
@@ -27,13 +44,15 @@
         <button
           (click)="onConvert()"
           [disabled]="isLoading()"
-          class="w-1/4 text-sm px-2 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
+          class="w-1/4 text-sm px-2 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        >
           {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
         </button>
         <button
           (click)="onRun()"
           [disabled]="isRunning()"
-          class="w-1/4 text-sm px-2 py-2 bg-green-600 text-white rounded disabled:opacity-50">
+          class="w-1/4 text-sm px-2 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+        >
           {{ isRunning() ? 'Menjalankan...' : 'Run' }}
         </button>
       </div>
@@ -44,24 +63,32 @@
   <aside
     class="fixed top-0 right-0 h-full w-96 bg-white border-l border-gray-300 shadow-lg p-4 flex flex-col gap-4 transition-transform duration-300 z-50"
     [class.translate-x-0]="sidebarOpen()"
-    [class.translate-x-full]="!sidebarOpen()">
+    [class.translate-x-full]="!sidebarOpen()"
+  >
     <div class="flex items-center justify-between">
-      <h2 class="font-semibold text-lg">Log</h2>
-      <button (click)="toggleSidebar()" class="text-gray-500 text-xl leading-none">&times;</button>
+      <h2 class="font-semibold text-lg">Terminal</h2>
+      <button (click)="toggleSidebar()" class="text-gray-500 text-xl leading-none cursor-pointer">
+        &times;
+      </button>
     </div>
 
     <div>
-      <label class="block text-sm mb-1">Input program (opsional) — satu nilai per baris, sesuai urutan input():</label>
+      <label class="block text-sm mb-1"
+        >Input program (opsional) — satu nilai per baris, sesuai urutan input():</label
+      >
       <textarea
         [ngModel]="stdinInput()"
         (ngModelChange)="stdinInput.set($event)"
         rows="3"
         placeholder="Contoh:&#10;Budi"
-        class="w-full border border-gray-300 rounded p-2"></textarea>
+        class="w-full border border-gray-300 rounded p-2"
+      ></textarea>
     </div>
 
     @if (isRunning()) {
-      <p class="text-gray-600 text-sm">⏳ Meng-compile & menjalankan kode — biasanya 15–20 detik...</p>
+      <p class="text-gray-600 text-sm">
+        ⏳ Meng-compile & menjalankan kode — biasanya 15–20 detik...
+      </p>
     }
     @if (errorMessage()) {
       <p class="text-red-600 text-sm">{{ errorMessage() }}</p>
@@ -79,7 +106,9 @@
           <pre class="bg-orange-50 p-2 rounded overflow-auto text-sm">{{ runStderr() }}</pre>
         }
         @if (runTimedOut()) {
-          <p class="text-red-600 mt-2 text-sm">⚠️ Melebihi batas waktu (kemungkinan infinite loop)</p>
+          <p class="text-red-600 mt-2 text-sm">
+            ⚠️ Melebihi batas waktu (kemungkinan infinite loop)
+          </p>
         }
       </div>
     }

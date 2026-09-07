@@ -2,18 +2,32 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Converter } from '../../core/services/converter';
 import { CodeEditor } from '../../shared/components/code-editor/code-editor';
+import { provideIcons, NgIcon } from "@ng-icons/core"
+import { remixBookOpenLine, remixUploadLine, remixTerminalFill, remixSunLine, remixMoonLine } from '@ng-icons/remixicon';
 
 @Component({
   selector: 'app-converter-page',
   standalone: true,
-  imports: [FormsModule, CodeEditor],
+  imports: [FormsModule, CodeEditor, NgIcon],
+  providers: [
+    provideIcons({
+      remixBookOpenLine,
+      remixUploadLine,
+      remixTerminalFill,
+      remixSunLine,
+      remixMoonLine,
+    }),
+  ],
   templateUrl: './converter-page.html',
   styleUrl: './converter-page.css',
 })
 export class ConverterPage {
+  public isDarkMode = false;
   private converter = inject(Converter);
 
-  pseudocode = signal(['Program NamaProgram', 'Kamus:', '    ', 'Algoritma:', '    ', 'EndProgram'].join('\n'));
+  pseudocode = signal(
+    ['Program NamaProgram', 'Kamus:', '    ', 'Algoritma:', '    ', 'EndProgram'].join('\n'),
+  );
   goCode = signal('');
   errorMessage = signal('');
   isLoading = signal(false);
@@ -27,6 +41,15 @@ export class ConverterPage {
 
   sidebarOpen = signal(false);
   hasUnreadLog = signal(false);
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
 
   toggleSidebar() {
     this.sidebarOpen.update((open) => !open);

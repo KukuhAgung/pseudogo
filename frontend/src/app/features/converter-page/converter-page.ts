@@ -25,6 +25,22 @@ export class ConverterPage {
   runError = signal('');
   isRunning = signal(false);
 
+  sidebarOpen = signal(false);
+  hasUnreadLog = signal(false);
+
+  toggleSidebar() {
+    this.sidebarOpen.update((open) => !open);
+    if (this.sidebarOpen()) {
+      this.hasUnreadLog.set(false);
+    }
+  }
+
+  private flagUnreadIfClosed() {
+    if (!this.sidebarOpen()) {
+      this.hasUnreadLog.set(true);
+    }
+  }
+
   onConvert() {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -36,6 +52,7 @@ export class ConverterPage {
       error: (err) => {
         this.errorMessage.set(err.message ?? 'Terjadi kesalahan');
         this.isLoading.set(false);
+        this.flagUnreadIfClosed();
       },
     });
   }
@@ -52,10 +69,12 @@ export class ConverterPage {
         this.runStderr.set(result.stderr);
         this.runTimedOut.set(result.timedOut);
         this.isRunning.set(false);
+        this.flagUnreadIfClosed();
       },
       error: (err) => {
         this.runError.set(err.message ?? 'Terjadi kesalahan');
         this.isRunning.set(false);
+        this.flagUnreadIfClosed();
       },
     });
   }

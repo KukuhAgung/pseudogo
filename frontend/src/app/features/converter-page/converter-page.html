@@ -1,60 +1,87 @@
-<app-code-editor [(value)]="pseudocode"></app-code-editor>
-
-<!-- Bagian Convert -->
-<div class="mt-4 p-4 border border-gray-300 rounded">
-  <h2 class="font-semibold mb-2">Convert ke Go</h2>
-  <button
-    (click)="onConvert()"
-    [disabled]="isLoading()"
-    class="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
-    {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
-  </button>
-
-  @if (errorMessage()) {
-    <p class="text-red-600 mt-2">{{ errorMessage() }}</p>
-  }
-  @if (goCode()) {
-    <pre class="mt-2 bg-gray-100 p-2 rounded overflow-auto text-sm">{{ goCode() }}</pre>
-  }
-</div>
-
-<!-- Bagian Run -->
-<div class="mt-4 p-4 border border-gray-300 rounded">
-  <h2 class="font-semibold mb-2">Run (jalankan program)</h2>
-
-  <label class="block text-sm mb-1">Input program (opsional) — satu nilai per baris, sesuai urutan input():</label>
-  <textarea
-    [ngModel]="stdinInput()"
-    (ngModelChange)="stdinInput.set($event)"
-    rows="3"
-    placeholder="Contoh:&#10;Budi"
-    class="w-full border border-gray-300 rounded p-2 mb-2">
-  </textarea>
-
-  <button
-    (click)="onRun()"
-    [disabled]="isRunning()"
-    class="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50">
-    {{ isRunning() ? 'Menjalankan...' : 'Run' }}
-  </button>
-
-  @if (isRunning()) {
-    <p class="mt-2 text-gray-600">⏳ Meng-compile &amp; menjalankan kode — biasanya 15–20 detik...</p>
-  }
-  @if (runError()) {
-    <p class="text-red-600 mt-2">{{ runError() }}</p>
-  }
-  @if (runOutput() || runStderr()) {
-    <div class="mt-2">
-      <h3 class="font-semibold">Output program</h3>
-      <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm">{{ runOutput() }}</pre>
-      @if (runStderr()) {
-        <h3 class="font-semibold text-orange-600 mt-2">stderr</h3>
-        <pre class="bg-orange-50 p-2 rounded overflow-auto text-sm">{{ runStderr() }}</pre>
-      }
-      @if (runTimedOut()) {
-        <p class="text-red-600 mt-2">⚠️ Melebihi batas waktu (kemungkinan infinite loop)</p>
-      }
+<section class="h-screen flex flex-col items-center relative overflow-hidden">
+  <nav class="w-full flex items-center justify-between p-4 border-b border-slate-400">
+    <h1 class="text-xl font-bold">PseudoGO</h1>
+    <div class="menu flex items-center p-2 gap-4">
+      <h6>kamus</h6>
+      <button>baca file</button>
+      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
+      <button>darkmode</button>
+      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
+      <button (click)="toggleSidebar()" class="relative px-2">
+        Log
+        @if (hasUnreadLog()) {
+          <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+        }
+      </button>
     </div>
-  }
-</div>
+  </nav>
+
+  <main class="flex gap-4 w-full h-full justify-between items-center p-4">
+    <div class="w-1/2 h-[90%]">
+      <app-code-editor [(value)]="pseudocode"></app-code-editor>
+    </div>
+
+    <div class="w-1/2 h-[90%] flex flex-col border border-gray-300">
+      <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm h-[80%]">{{ goCode() }}</pre>
+      <div class="mt-4 w-full flex gap-4 px-4">
+        <button
+          (click)="onConvert()"
+          [disabled]="isLoading()"
+          class="w-1/4 text-sm px-2 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
+          {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
+        </button>
+        <button
+          (click)="onRun()"
+          [disabled]="isRunning()"
+          class="w-1/4 text-sm px-2 py-2 bg-green-600 text-white rounded disabled:opacity-50">
+          {{ isRunning() ? 'Menjalankan...' : 'Run' }}
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sidebar Log: input program + error/hasil run -->
+  <aside
+    class="fixed top-0 right-0 h-full w-96 bg-white border-l border-gray-300 shadow-lg p-4 flex flex-col gap-4 transition-transform duration-300 z-50"
+    [class.translate-x-0]="sidebarOpen()"
+    [class.translate-x-full]="!sidebarOpen()">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-lg">Log</h2>
+      <button (click)="toggleSidebar()" class="text-gray-500 text-xl leading-none">&times;</button>
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1">Input program (opsional) — satu nilai per baris, sesuai urutan input():</label>
+      <textarea
+        [ngModel]="stdinInput()"
+        (ngModelChange)="stdinInput.set($event)"
+        rows="3"
+        placeholder="Contoh:&#10;Budi"
+        class="w-full border border-gray-300 rounded p-2"></textarea>
+    </div>
+
+    @if (isRunning()) {
+      <p class="text-gray-600 text-sm">⏳ Meng-compile & menjalankan kode — biasanya 15–20 detik...</p>
+    }
+    @if (errorMessage()) {
+      <p class="text-red-600 text-sm">{{ errorMessage() }}</p>
+    }
+    @if (runError()) {
+      <p class="text-red-600 text-sm">{{ runError() }}</p>
+    }
+
+    @if (runOutput() || runStderr()) {
+      <div class="flex-1 overflow-auto">
+        <h3 class="font-semibold mb-1">Output Program</h3>
+        <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm">{{ runOutput() }}</pre>
+        @if (runStderr()) {
+          <h3 class="font-semibold text-orange-600 mt-2">stderr</h3>
+          <pre class="bg-orange-50 p-2 rounded overflow-auto text-sm">{{ runStderr() }}</pre>
+        }
+        @if (runTimedOut()) {
+          <p class="text-red-600 mt-2 text-sm">⚠️ Melebihi batas waktu (kemungkinan infinite loop)</p>
+        }
+      </div>
+    }
+  </aside>
+</section>

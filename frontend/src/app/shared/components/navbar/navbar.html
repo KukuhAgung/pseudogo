@@ -1,0 +1,46 @@
+<nav class="w-full flex items-center justify-between p-4 border-b border-line bg-bg-0">
+  <div class="flex items-center gap-4">
+    <a
+      routerLink="/"
+      routerLinkActive="bg-bg-weak font-bold"
+      [routerLinkActiveOptions]="{exact: true}"
+      class="cursor-pointer flex items-center gap-2 px-3 py-2 text-sub hover:bg-bg-weak shrink-0 justify-center rounded-lg border border-line"
+    >
+      <ng-icon name="remixUploadLine" /> 
+      <span class="text-sm whitespace-nowrap text-sub font-medium">Converter</span>
+    </a>
+    
+    <a
+      routerLink="/docs"
+      routerLinkActive="bg-bg-weak font-bold"
+      class="cursor-pointer flex items-center gap-2 px-3 py-2 text-sub hover:bg-bg-weak shrink-0 justify-center rounded-lg border border-line"
+    >
+      <ng-icon name="remixBookOpenLine" />
+      <span class="text-sm whitespace-nowrap text-sub font-medium">Kamus</span>
+    </a>
+  </div>
+  
+  <div class="flex items-center p-2 gap-4">
+    <button
+      (click)="ui.toggleDarkMode()"
+      class="cursor-pointer border-line text-sub hover:bg-bg-weak flex size-8.5 shrink-0 items-center justify-center rounded-[10px] border"
+    >
+      @if (ui.isDarkMode()) {
+        <ng-icon name="remixSunLine" />
+      } @else {
+        <ng-icon name="remixMoonLine" />
+      }
+    </button>
+    <div class="w-px h-3 bg-line-strong rounded-full"></div>
+
+    <button
+      (click)="ui.toggleSidebar()"
+      class="relative cursor-pointer border-line text-sub hover:bg-bg-weak flex size-8.5 shrink-0 items-center justify-center rounded-md border"
+    >
+      <ng-icon name="remixTerminalFill" />
+      @if (ui.hasUnreadLog()) {
+        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+      }
+    </button>
+  </div>
+</nav>

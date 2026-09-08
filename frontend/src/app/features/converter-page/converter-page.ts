@@ -2,27 +2,20 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Converter } from '../../core/services/converter';
 import { CodeEditor } from '../../shared/components/code-editor/code-editor';
-import { provideIcons, NgIcon } from "@ng-icons/core"
-import { remixBookOpenLine, remixUploadLine, remixTerminalFill, remixSunLine, remixMoonLine } from '@ng-icons/remixicon';
+import { UiStateService } from '../../core/services/ui-state';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { remixTerminalFill, remixCloseFill, remixErrorWarningLine } from '@ng-icons/remixicon';
 
 @Component({
   selector: 'app-converter-page',
   standalone: true,
   imports: [FormsModule, CodeEditor, NgIcon],
-  providers: [
-    provideIcons({
-      remixBookOpenLine,
-      remixUploadLine,
-      remixTerminalFill,
-      remixSunLine,
-      remixMoonLine,
-    }),
-  ],
+  providers: [provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine })],
   templateUrl: './converter-page.html',
   styleUrl: './converter-page.css',
 })
 export class ConverterPage {
-  public isDarkMode = false;
+  ui = inject(UiStateService);
   private converter = inject(Converter);
 
   pseudocode = signal(
@@ -39,31 +32,6 @@ export class ConverterPage {
   runError = signal('');
   isRunning = signal(false);
 
-  sidebarOpen = signal(false);
-  hasUnreadLog = signal(false);
-
-  toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }
-
-  toggleSidebar() {
-    this.sidebarOpen.update((open) => !open);
-    if (this.sidebarOpen()) {
-      this.hasUnreadLog.set(false);
-    }
-  }
-
-  private flagUnreadIfClosed() {
-    if (!this.sidebarOpen()) {
-      this.hasUnreadLog.set(true);
-    }
-  }
-
   onConvert() {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -75,7 +43,7 @@ export class ConverterPage {
       error: (err) => {
         this.errorMessage.set(err.message ?? 'Terjadi kesalahan');
         this.isLoading.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed(); 
       },
     });
   }
@@ -92,12 +60,12 @@ export class ConverterPage {
         this.runStderr.set(result.stderr);
         this.runTimedOut.set(result.timedOut);
         this.isRunning.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed();
       },
       error: (err) => {
         this.runError.set(err.message ?? 'Terjadi kesalahan');
         this.isRunning.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed(); 
       },
     });
   }

@@ -1,0 +1,72 @@
+<nav class="h-[90vh] p-6 flex flex-col font-sans text-sm gap-8">
+  <div>
+    <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider mb-3">
+      Getting Started
+    </h3>
+
+    <div class="border-l border-line flex flex-col">
+      <a
+        routerLink="/docs/introduction"
+        routerLinkActive="border-primary text-primary font-semibold"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Pengenalan
+      </a>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider mb-3">Sintaks Dasar</h3>
+
+    <div class="border-l border-line flex flex-col">
+      <a
+        routerLink="/docs/variable"
+        routerLinkActive="border-primary text-primary font-semibold"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Variabel & Tipe Data
+      </a>
+
+      <a
+        routerLink="/docs/input-output"
+        routerLinkActive="border-primary text-primary font-semibold"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Input & Output
+      </a>
+
+      <a
+        routerLink="/docs/operators"
+        routerLinkActive="border-primary text-primary font-semibold"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Operator Matematika & Logika
+      </a>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider mb-3">
+      Struktur Kontrol
+    </h3>
+
+    <div class="border-l border-line flex flex-col">
+      <a
+        routerLink="/docs/conditional-statements"
+        routerLinkActive="border-primary text-primary font-semibold"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Percabangan (If-Else)
+      </a>
+
+      <a
+        routerLink="/docs/looping"
+        routerLinkActive="border-primary text-primary font-semibold"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Perulangan (For/While)
+      </a>
+    </div>
+  </div>
+</nav>

@@ -55,6 +55,8 @@ const modernTheme = EditorView.theme({
   },
   '.cm-content': {
     caretColor: 'var(--color-strong)',
+    paddingTop: '1.25rem',
+    paddingLeft: '0.4rem'
   },
   '.cm-gutters': {
     backgroundColor: 'var(--color-bg-0)',

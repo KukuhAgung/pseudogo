@@ -34,7 +34,7 @@ export class Converter {
   }
 
   run(pseudocode: string, input: string): Observable<RunResult> {
-    return this.http.post<RunResponse>('http://localhost:8080/run', { pseudocode }).pipe(
+    return this.http.post<RunResponse>('http://localhost:8080/run', { pseudocode, input }).pipe(
       map((res) => {
         if (res.error) throw new Error(res.error);
         return {

@@ -2,18 +2,25 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Converter } from '../../core/services/converter';
 import { CodeEditor } from '../../shared/components/code-editor/code-editor';
+import { UiStateService } from '../../core/services/ui-state';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { remixTerminalFill, remixCloseFill, remixErrorWarningLine } from '@ng-icons/remixicon';
 
 @Component({
   selector: 'app-converter-page',
   standalone: true,
-  imports: [FormsModule, CodeEditor],
+  imports: [FormsModule, CodeEditor, NgIcon],
+  providers: [provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine })],
   templateUrl: './converter-page.html',
   styleUrl: './converter-page.css',
 })
 export class ConverterPage {
+  ui = inject(UiStateService);
   private converter = inject(Converter);
 
-  pseudocode = signal(['Program NamaProgram', 'Kamus:', '    ', 'Algoritma:', '    ', 'EndProgram'].join('\n'));
+  pseudocode = signal(
+    ['Program NamaProgram', 'Kamus:', '    ', 'Algoritma:', '    ', 'EndProgram'].join('\n'),
+  );
   goCode = signal('');
   errorMessage = signal('');
   isLoading = signal(false);
@@ -24,22 +31,6 @@ export class ConverterPage {
   runTimedOut = signal(false);
   runError = signal('');
   isRunning = signal(false);
-
-  sidebarOpen = signal(false);
-  hasUnreadLog = signal(false);
-
-  toggleSidebar() {
-    this.sidebarOpen.update((open) => !open);
-    if (this.sidebarOpen()) {
-      this.hasUnreadLog.set(false);
-    }
-  }
-
-  private flagUnreadIfClosed() {
-    if (!this.sidebarOpen()) {
-      this.hasUnreadLog.set(true);
-    }
-  }
 
   onConvert() {
     this.isLoading.set(true);
@@ -52,7 +43,7 @@ export class ConverterPage {
       error: (err) => {
         this.errorMessage.set(err.message ?? 'Terjadi kesalahan');
         this.isLoading.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed(); 
       },
     });
   }
@@ -69,12 +60,12 @@ export class ConverterPage {
         this.runStderr.set(result.stderr);
         this.runTimedOut.set(result.timedOut);
         this.isRunning.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed();
       },
       error: (err) => {
         this.runError.set(err.message ?? 'Terjadi kesalahan');
         this.isRunning.set(false);
-        this.flagUnreadIfClosed();
+        this.ui.flagUnreadIfClosed(); 
       },
     });
   }

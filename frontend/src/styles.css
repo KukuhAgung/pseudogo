@@ -1,3 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --default-font-family: var(--font-sans);
+  --default-mono-font-family: var(--font-mono);
+
+  /* Font Weights & Line Heights */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --leading-tight: 1.25;
+  --leading-relaxed: 1.625;
+
+  /* Typography (Font Sizes + Line Heights) */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(2 / 1.5);
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: calc(2.5 / 2.25);
+
+  /* Spacing & Radius */
+  --spacing: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+
+  /* Colors (Base) */
+  --color-black: #000;
+  --color-white: #fff;
+  --color-red-500: #fb2c36;
+  --color-red-700: #bf000f;
+
+  /* Colors (Semantic UI) */
+  --color-bg-0: #fff;
+  --color-bg-weak: #f7f7f7;
+  --color-line: #ebebeb;
+  --color-line-strong: #d1d1d1;
+  --color-strong: #171717;
+  --color-sub: #5c5c5c;
+  --color-soft: #a3a3a3;
+
+  /* Colors (Brand & Accents) */
+  --color-primary: #fb3748;
+  --color-primary-hover: #d02533;
+  --color-primary-weak: #ffecee;
+  --color-primary-line: #ffc0c5;
+  --color-accent-green: #1fc16b;
+  --color-green-weak: #e8f9ea;
+  --color-green-line: #b7f2c9;
+  --color-accent-purple: #7d52f4;
+
+  /* Colors (Warning) */
+  --color-warning: #fa7319;
+  --color-warning-weak: #fff3ea;
+  --color-warning-line: #ffd4b5;
+
+  /* Animations & Transitions */
+  --animate-spin: spin 1s linear infinite;
+  --default-transition-duration: 0.15s;
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Breakpoints */
+  --breakpoint-mob: 860px;
+  --breakpoint-xl: 1180px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg-0);
+    color: var(--color-strong);
+    transition-property: color, background-color;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
+  }
+
+  .dark {
+    --color-bg-0: #0c0c0c;
+    --color-bg-weak: #1a1a1a;
+    --color-strong: #f7f7f7;
+    --color-sub: #a3a3a3;
+    --color-line: #333333;
+    --color-primary: #ff5c6c;
+    --color-primary-weak: #3a1519;
+    --color-primary-line: #5e2229;
+  }
+}

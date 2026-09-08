@@ -1,87 +1,180 @@
-<section class="h-screen flex flex-col items-center relative overflow-hidden">
-  <nav class="w-full flex items-center justify-between p-4 border-b border-slate-400">
-    <h1 class="text-xl font-bold">PseudoGO</h1>
-    <div class="menu flex items-center p-2 gap-4">
-      <h6>kamus</h6>
-      <button>baca file</button>
-      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
-      <button>darkmode</button>
-      <div class="w-px h-6 bg-slate-400 rounded-full"></div>
-      <button (click)="toggleSidebar()" class="relative px-2">
-        Log
-        @if (hasUnreadLog()) {
-          <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-        }
-      </button>
-    </div>
-  </nav>
+<section class="flex flex-row gap-6 w-full flex-1 p-6 items-stretch min-h-[calc(100vh-80px)]">
+  <!-- Code Editor -->
+  <div class="w-1/2 flex flex-col rounded-lg shadow-sm border border-line overflow-hidden bg-bg-0">
+    <app-code-editor [(value)]="pseudocode" class="flex-1"></app-code-editor>
+  </div>
 
-  <main class="flex gap-4 w-full h-full justify-between items-center p-4">
-    <div class="w-1/2 h-[90%]">
-      <app-code-editor [(value)]="pseudocode"></app-code-editor>
-    </div>
+  <!-- Golang Output & Actions -->
+  <div class="w-1/2 flex flex-col border border-line rounded-lg shadow-sm bg-bg-0 overflow-hidden">
+    <!-- Toolbar Atas (Memuat Tombol Convert & Run) -->
+    <div class="flex items-center justify-between px-4 py-3 bg-bg-weak border-b border-line">
+      <h2 class="text-sm font-semibold text-strong">Golang Output</h2>
 
-    <div class="w-1/2 h-[90%] flex flex-col border border-gray-300">
-      <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm h-[80%]">{{ goCode() }}</pre>
-      <div class="mt-4 w-full flex gap-4 px-4">
+      <div class="flex items-center gap-3">
         <button
           (click)="onConvert()"
           [disabled]="isLoading()"
-          class="w-1/4 text-sm px-2 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
+          class="px-5 cursor-pointer bg-primary-weak border border-primary-line text-primary hover:bg-primary-line h-8 shrink-0 items-center justify-center rounded-md text-[13px] font-semibold whitespace-nowrap flex transition-colors disabled:opacity-50"
+        >
           {{ isLoading() ? 'Mengonversi...' : 'Convert' }}
         </button>
         <button
           (click)="onRun()"
           [disabled]="isRunning()"
-          class="w-1/4 text-sm px-2 py-2 bg-green-600 text-white rounded disabled:opacity-50">
+          class="px-5 cursor-pointer bg-accent-green text-white hover:opacity-90 h-8 shrink-0 items-center justify-center rounded-md text-[13px] font-semibold whitespace-nowrap flex transition-opacity disabled:opacity-50"
+        >
           {{ isRunning() ? 'Menjalankan...' : 'Run' }}
         </button>
       </div>
     </div>
-  </main>
 
-  <!-- Sidebar Log: input program + error/hasil run -->
-  <aside
-    class="fixed top-0 right-0 h-full w-96 bg-white border-l border-gray-300 shadow-lg p-4 flex flex-col gap-4 transition-transform duration-300 z-50"
-    [class.translate-x-0]="sidebarOpen()"
-    [class.translate-x-full]="!sidebarOpen()">
-    <div class="flex items-center justify-between">
-      <h2 class="font-semibold text-lg">Log</h2>
-      <button (click)="toggleSidebar()" class="text-gray-500 text-xl leading-none">&times;</button>
+    <!-- Area Konten Output -->
+    <div class="flex-1 p-4 overflow-hidden">
+      @if (goCode()) {
+        <pre class="w-full h-full text-strong font-mono overflow-auto text-sm focus:outline-none">{{
+          goCode()
+        }}</pre>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Sidebar Log: input program + error/hasil run -->
+<aside
+  class="fixed top-0 right-0 h-full w-100 max-w-full bg-bg-0 border-l border-line shadow-2xl flex flex-col transition-transform duration-300 z-50"
+  [class.translate-x-0]="ui.sidebarOpen()"
+  [class.translate-x-full]="!ui.sidebarOpen()"
+>
+  <!-- 1. Header Area -->
+  <header class="flex items-center justify-between p-4 border-b border-line bg-bg-weak/30">
+    <div class="flex items-center gap-2">
+      <ng-icon name="remixTerminalFill" class="text-xl text-sub" />
+      <h2 class="font-semibold text-base text-strong">Terminal</h2>
     </div>
 
-    <div>
-      <label class="block text-sm mb-1">Input program (opsional) — satu nilai per baris, sesuai urutan input():</label>
+    <button
+      (click)="ui.toggleSidebar()"
+      class="p-1.5 rounded-md text-soft hover:bg-line hover:text-strong transition-colors cursor-pointer leading-none"
+      title="Tutup Terminal"
+    >
+      <ng-icon name="remixCloseFill" class="text-xl" />
+    </button>
+  </header>
+
+  <!-- 2. Main Scrollable Content -->
+  <div class="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
+    <!-- Section: Input Program -->
+    <div class="space-y-2">
+      <div>
+        <label class="block text-sm font-semibold text-strong">
+          Input Program <span class="text-soft font-normal">(opsional)</span>
+        </label>
+        <p class="text-xs text-sub mt-0.5">
+          Satu nilai per baris, sesuai urutan pemanggilan <code>input()</code>.
+        </p>
+      </div>
       <textarea
         [ngModel]="stdinInput()"
         (ngModelChange)="stdinInput.set($event)"
         rows="3"
-        placeholder="Contoh:&#10;Budi"
-        class="w-full border border-gray-300 rounded p-2"></textarea>
+        placeholder="Contoh:&#10;Budi&#10;20"
+        class="w-full bg-bg-weak text-strong border border-line rounded-lg p-3 font-mono text-sm placeholder:text-soft focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-y"
+      ></textarea>
     </div>
 
+    <!-- Section: Status Loading -->
     @if (isRunning()) {
-      <p class="text-gray-600 text-sm">⏳ Meng-compile & menjalankan kode — biasanya 15–20 detik...</p>
-    }
-    @if (errorMessage()) {
-      <p class="text-red-600 text-sm">{{ errorMessage() }}</p>
-    }
-    @if (runError()) {
-      <p class="text-red-600 text-sm">{{ runError() }}</p>
+      <div
+        class="flex items-center gap-3 p-3 bg-primary-weak text-primary-hover border border-primary-line rounded-lg text-sm"
+      >
+        <svg
+          class="animate-spin w-4 h-4 text-primary"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span class="font-medium">Meng-compile & menjalankan (15–20 detik)...</span>
+      </div>
     }
 
+    <!-- Section: Error Messages -->
+    @if (errorMessage()) {
+      <div
+        class="flex items-start gap-2 p-3 bg-red-500/10 text-red-700 border border-red-500/20 rounded-lg text-sm"
+      >
+        <ng-icon name="remixCloseFill" class="text-xl shrink-0" color="#fb3748" />
+        <p class="mt-0.5 leading-relaxed">{{ errorMessage() }}</p>
+      </div>
+    }
+    @if (runError()) {
+      <div
+        class="flex items-start gap-2 p-3 bg-red-500/10 text-red-700 border border-red-500/20 rounded-lg text-sm"
+      >
+        <ng-icon name="remixCloseFill" class="text-xl shrink-0" color="#fb3748" />
+        <p class="mt-0.5 leading-relaxed">{{ runError() }}</p>
+      </div>
+    }
+
+    <!-- Section: Output Area -->
     @if (runOutput() || runStderr()) {
-      <div class="flex-1 overflow-auto">
-        <h3 class="font-semibold mb-1">Output Program</h3>
-        <pre class="bg-gray-100 p-2 rounded overflow-auto text-sm">{{ runOutput() }}</pre>
+      <div class="flex flex-col gap-4">
+        <div>
+          <h3 class="text-xs font-bold tracking-wider text-sub uppercase mb-2">Output Program</h3>
+          <div class="bg-[#1e1e1e] border border-[#333] rounded-lg shadow-inner overflow-hidden">
+            <div class="flex items-center gap-1.5 px-3 py-2 bg-[#2d2d2d] border-b border-[#333]">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+              <span class="ml-2 text-[10px] text-gray-400 font-mono">stdout</span>
+            </div>
+            <pre
+              class="p-4 font-mono text-sm text-gray-100 overflow-x-auto whitespace-pre-wrap min-h-15"
+              >{{ runOutput() }}</pre>
+          </div>
+        </div>
+
+        <!-- Standard Error -->
         @if (runStderr()) {
-          <h3 class="font-semibold text-orange-600 mt-2">stderr</h3>
-          <pre class="bg-orange-50 p-2 rounded overflow-auto text-sm">{{ runStderr() }}</pre>
+          <div>
+            <h3 class="text-xs font-bold tracking-wider text-warning uppercase mb-2">
+              Standard Error (stderr)
+            </h3>
+            <pre
+              class="bg-warning-weak text-warning-hover font-mono p-3.5 rounded-lg overflow-x-auto text-sm border border-warning-line whitespace-pre-wrap"
+              >{{ runStderr() }}</pre>
+          </div>
         }
+
+        <!-- Timeout Warning -->
         @if (runTimedOut()) {
-          <p class="text-red-600 mt-2 text-sm">⚠️ Melebihi batas waktu (kemungkinan infinite loop)</p>
+          <div
+            class="flex items-start gap-2 p-3 bg-warning-weak text-warning-hover border border-warning-line rounded-lg text-sm mt-2"
+          >
+            <ng-icon name="remixErrorWarningLine" class="text-base" color="#fa7319" />
+            <div>
+              <p class="font-semibold mb-0.5">Melebihi batas waktu eksekusi</p>
+              <p class="text-xs">
+                Program dihentikan paksa. Kemungkinan terjadi <em>infinite loop</em> atau program
+                menunggu input yang tidak tersedia.
+              </p>
+            </div>
+          </div>
         }
       </div>
     }
-  </aside>
-</section>
+  </div>
+</aside>

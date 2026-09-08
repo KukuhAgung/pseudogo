@@ -27,7 +27,7 @@ class ActiveLineDotMarker extends GutterMarker {
     dot.style.width = '6px';
     dot.style.height = '6px';
     dot.style.borderRadius = '50%';
-    dot.style.backgroundColor = '#9ca3af';
+    dot.style.backgroundColor = 'var(--color-soft)';
     return dot;
   }
 }
@@ -49,17 +49,18 @@ const activeLineDotGutter = gutter({
 
 const modernTheme = EditorView.theme({
   '&': {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--color-bg-0)',
+    color: 'var(--color-strong)',
     height: '100%',
   },
   '.cm-content': {
-    caretColor: '#374151',
+    caretColor: 'var(--color-strong)',
   },
   '.cm-gutters': {
-    backgroundColor: '#ffffff',
-    color: '#9ca3af',
+    backgroundColor: 'var(--color-bg-0)',
+    color: 'var(--color-soft)',
     border: 'none',
-    borderRight: '1px solid #e5e7eb',
+    borderRight: '1px solid var(--color-line)',
   },
   '.cm-active-line-dot-gutter': {
     minWidth: '14px',

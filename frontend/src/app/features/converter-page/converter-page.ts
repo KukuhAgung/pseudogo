@@ -5,12 +5,15 @@ import { CodeEditor } from '../../shared/components/code-editor/code-editor';
 import { UiStateService } from '../../core/services/ui-state';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { remixTerminalFill, remixCloseFill, remixErrorWarningLine } from '@ng-icons/remixicon';
+import { boxGoLangLogo } from '@ng-icons/boxicons/logos';
 
 @Component({
   selector: 'app-converter-page',
   standalone: true,
   imports: [FormsModule, CodeEditor, NgIcon],
-  providers: [provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine })],
+  providers: [
+    provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine, boxGoLangLogo }),
+  ],
   templateUrl: './converter-page.html',
   styleUrl: './converter-page.css',
 })
@@ -22,7 +25,7 @@ export class ConverterPage {
     ['Program NamaProgram', 'Kamus:', '    ', 'Algoritma:', '    ', 'EndProgram'].join('\n'),
   );
   goCode = signal('');
-  errorMessage = signal('');
+  errorMessage = signal<string | null>(null);
   isLoading = signal(false);
 
   stdinInput = signal('');
@@ -32,6 +35,12 @@ export class ConverterPage {
   runError = signal('');
   isRunning = signal(false);
 
+  clearError() {
+    this.errorMessage.set(null);
+    this.runError.set('');
+    this.runStderr.set('');
+  }
+
   onConvert() {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -39,11 +48,15 @@ export class ConverterPage {
       next: (result) => {
         this.goCode.set(result);
         this.isLoading.set(false);
+        const needsInput = result.includes('fmt.Scan') || result.includes('fmt.Scanf');
+
+        if (needsInput) {
+          this.ui.flagUnreadIfClosed();
+        }
       },
       error: (err) => {
         this.errorMessage.set(err.message ?? 'Terjadi kesalahan');
         this.isLoading.set(false);
-        this.ui.flagUnreadIfClosed(); 
       },
     });
   }
@@ -65,7 +78,6 @@ export class ConverterPage {
       error: (err) => {
         this.runError.set(err.message ?? 'Terjadi kesalahan');
         this.isRunning.set(false);
-        this.ui.flagUnreadIfClosed(); 
       },
     });
   }

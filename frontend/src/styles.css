@@ -74,15 +74,14 @@
   /* Breakpoints */
   --breakpoint-mob: 860px;
   --breakpoint-xl: 1180px;
+
+  --color-scrollbar: #a3a3a3;
 }
 
 @layer base {
   body {
     background-color: var(--color-bg-0);
     color: var(--color-strong);
-    transition-property: color, background-color;
-    transition-duration: var(--default-transition-duration);
-    transition-timing-function: var(--default-transition-timing-function);
   }
 
   .dark {
@@ -91,8 +90,35 @@
     --color-strong: #f7f7f7;
     --color-sub: #a3a3a3;
     --color-line: #333333;
+    --color-line-strong: #333333;
     --color-primary: #ff5c6c;
     --color-primary-weak: #3a1519;
     --color-primary-line: #5e2229;
+    --color-scrollbar: #252525;
   }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent; 
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3f3f46;
+  border-radius: 9999px; 
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #52525b;
 }

@@ -1,0 +1,15 @@
+<section class="absolute inset-0 flex w-full h-full overflow-hidden items-stretch bg-bg-0">
+  
+  <aside class="w-80 pl-8 shrink-0 h-full border-r border-line bg-bg-0 overflow-y-auto">
+    <app-docs-sidebar></app-docs-sidebar>
+  </aside>
+
+  <main #scrollContainer class="flex-1 h-full overflow-y-auto bg-bg-0">
+      
+      <div class="mx-auto w-full max-w-4xl px-5 pt-6 pb-20 mob:px-8 mob:pt-10 mob:pb-24 lg:px-12">
+          <router-outlet></router-outlet>
+      </div>
+
+  </main>
+
+</section>

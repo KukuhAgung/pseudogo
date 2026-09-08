@@ -9,5 +9,5 @@ import { NavbarComponent } from './shared/components/navbar/navbar';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('frontend');
+  protected readonly title = signal('PseudoGo');
 }

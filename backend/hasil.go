@@ -19,7 +19,7 @@ func SelectionSort(arr []int, N int) {
 
 }
 
-// Program: TestSelectionSort
+// TestSelectionSort
 func main() {
 	data := make([]int, 6)
 	var i int

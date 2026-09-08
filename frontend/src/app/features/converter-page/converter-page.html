@@ -6,11 +6,20 @@
 
   <!-- Golang Output & Actions -->
   <div class="w-1/2 flex flex-col border border-line rounded-lg shadow-sm bg-bg-0 overflow-hidden">
-    <!-- Toolbar Atas (Memuat Tombol Convert & Run) -->
-    <div class="flex items-center justify-between px-4 py-3 bg-bg-weak border-b border-line">
-      <h2 class="text-sm font-semibold text-strong">Golang Output</h2>
+    <!-- Toolbar -->
+    <div class="flex items-center justify-between bg-bg-weak border-b border-line pr-4">
+      <!-- Area Tab File -->
+      <div class="flex h-full">
+        <div
+          class="flex items-center gap-2.5 px-5 py-2.5 bg-bg-0 border-t-2 border-t-[#00ADD8] border-r border-line cursor-default"
+        >
+          <ng-icon name="boxGoLangLogo" color="#00ADD8" />
+          <span class="text-[12px] font-medium text-strong">main.go</span>
+        </div>
+      </div>
 
-      <div class="flex items-center gap-3">
+      <!-- Action Button -->
+      <div class="flex items-center gap-3 py-2">
         <button
           (click)="onConvert()"
           [disabled]="isLoading()"
@@ -31,21 +40,21 @@
     <!-- Area Konten Output -->
     <div class="flex-1 p-4 overflow-hidden">
       @if (goCode()) {
-        <pre class="w-full h-full text-strong font-mono overflow-auto text-sm focus:outline-none">{{
-          goCode()
-        }}</pre>
+        <pre
+          class="w-full h-full text-strong font-mono overflow-auto text-[13px] leading-relaxed focus:outline-none"
+          >{{ goCode() }}</pre>
       }
     </div>
   </div>
 </section>
 
-<!-- Sidebar Log: input program + error/hasil run -->
+<!-- Sidebar Log -->
 <aside
-  class="fixed top-0 right-0 h-full w-100 max-w-full bg-bg-0 border-l border-line shadow-2xl flex flex-col transition-transform duration-300 z-50"
+  class="fixed top-0 right-0 h-full w-100 max-w-full bg-bg-0 border-l border-line shadow-2xl flex flex-col transition-transform duration-300 z-50 translate-x-full"
   [class.translate-x-0]="ui.sidebarOpen()"
   [class.translate-x-full]="!ui.sidebarOpen()"
 >
-  <!-- 1. Header Area -->
+  <!-- Header Area -->
   <header class="flex items-center justify-between p-4 border-b border-line bg-bg-weak/30">
     <div class="flex items-center gap-2">
       <ng-icon name="remixTerminalFill" class="text-xl text-sub" />
@@ -61,9 +70,9 @@
     </button>
   </header>
 
-  <!-- 2. Main Scrollable Content -->
+  <!-- Main Scrollable Content -->
   <div class="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
-    <!-- Section: Input Program -->
+    <!-- Input Program -->
     <div class="space-y-2">
       <div>
         <label class="block text-sm font-semibold text-strong">
@@ -82,99 +91,89 @@
       ></textarea>
     </div>
 
-    <!-- Section: Status Loading -->
-    @if (isRunning()) {
-      <div
-        class="flex items-center gap-3 p-3 bg-primary-weak text-primary-hover border border-primary-line rounded-lg text-sm"
-      >
-        <svg
-          class="animate-spin w-4 h-4 text-primary"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        <span class="font-medium">Meng-compile & menjalankan (15–20 detik)...</span>
-      </div>
-    }
+    <button
+      (click)="onRun()"
+      [disabled]="isRunning()"
+      class="px-5 cursor-pointer bg-accent-green text-white hover:opacity-90 h-8 shrink-0 items-center justify-center rounded-md text-[13px] font-semibold whitespace-nowrap flex transition-opacity disabled:opacity-50"
+    >
+      {{ isRunning() ? 'Menjalankan...' : 'Run' }}
+    </button>
 
-    <!-- Section: Error Messages -->
-    @if (errorMessage()) {
-      <div
-        class="flex items-start gap-2 p-3 bg-red-500/10 text-red-700 border border-red-500/20 rounded-lg text-sm"
-      >
-        <ng-icon name="remixCloseFill" class="text-xl shrink-0" color="#fb3748" />
-        <p class="mt-0.5 leading-relaxed">{{ errorMessage() }}</p>
-      </div>
-    }
-    @if (runError()) {
-      <div
-        class="flex items-start gap-2 p-3 bg-red-500/10 text-red-700 border border-red-500/20 rounded-lg text-sm"
-      >
-        <ng-icon name="remixCloseFill" class="text-xl shrink-0" color="#fb3748" />
-        <p class="mt-0.5 leading-relaxed">{{ runError() }}</p>
-      </div>
-    }
-
-    <!-- Section: Output Area -->
-    @if (runOutput() || runStderr()) {
-      <div class="flex flex-col gap-4">
-        <div>
-          <h3 class="text-xs font-bold tracking-wider text-sub uppercase mb-2">Output Program</h3>
-          <div class="bg-[#1e1e1e] border border-[#333] rounded-lg shadow-inner overflow-hidden">
-            <div class="flex items-center gap-1.5 px-3 py-2 bg-[#2d2d2d] border-b border-[#333]">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-              <span class="ml-2 text-[10px] text-gray-400 font-mono">stdout</span>
-            </div>
-            <pre
-              class="p-4 font-mono text-sm text-gray-100 overflow-x-auto whitespace-pre-wrap min-h-15"
-              >{{ runOutput() }}</pre>
+    <!-- Output Area -->
+    <div class="flex flex-col gap-4">
+      <div>
+        <h3 class="text-xs font-bold tracking-wider text-sub mb-2">Output Program</h3>
+        <div class="bg-bg-0 border border-line-strong rounded-lg shadow-inner overflow-hidden">
+          <div class="flex items-center gap-1.5 px-3 py-2 bg- border-b border-line-strong">
+            <span class="text-[10px] text-sub font-mono">stdout</span>
           </div>
+          <pre
+            class="p-4 font-mono text-sm text-gray-100 overflow-x-auto whitespace-pre-wrap min-h-15"
+            >{{ runOutput() }}</pre>
         </div>
-
-        <!-- Standard Error -->
-        @if (runStderr()) {
-          <div>
-            <h3 class="text-xs font-bold tracking-wider text-warning uppercase mb-2">
-              Standard Error (stderr)
-            </h3>
-            <pre
-              class="bg-warning-weak text-warning-hover font-mono p-3.5 rounded-lg overflow-x-auto text-sm border border-warning-line whitespace-pre-wrap"
-              >{{ runStderr() }}</pre>
-          </div>
-        }
-
-        <!-- Timeout Warning -->
-        @if (runTimedOut()) {
-          <div
-            class="flex items-start gap-2 p-3 bg-warning-weak text-warning-hover border border-warning-line rounded-lg text-sm mt-2"
-          >
-            <ng-icon name="remixErrorWarningLine" class="text-base" color="#fa7319" />
-            <div>
-              <p class="font-semibold mb-0.5">Melebihi batas waktu eksekusi</p>
-              <p class="text-xs">
-                Program dihentikan paksa. Kemungkinan terjadi <em>infinite loop</em> atau program
-                menunggu input yang tidak tersedia.
-              </p>
-            </div>
-          </div>
-        }
       </div>
-    }
+    </div>
   </div>
 </aside>
+
+<div class="fixed bottom-20 right-12 flex flex-col gap-3 pointer-events-none">
+  <!-- Popup Loading -->
+  @if (isRunning() || isLoading()) {
+    <div
+      class="pointer-events-auto flex items-center gap-3.5 px-4 py-3.5 bg-bg-0 border border-line shadow-xl rounded-xl animate-slide-up max-w-87.5"
+    >
+      <svg
+        class="animate-spin w-5 h-5 text-primary shrink-0"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+      <div class="flex flex-col">
+        <span class="text-[13px] font-semibold text-strong leading-none">Memproses...</span>
+        <span class="text-xs text-sub mt-1">
+          {{ isRunning() ? 'Mengompilasi & menjalankan kode' : 'Mengonversi pseudocode' }}
+        </span>
+      </div>
+    </div>
+  }
+
+  <!-- Popup Error -->
+  @if (errorMessage() || runError() || runStderr() || runTimedOut()) {
+    <div
+      class="pointer-events-auto flex items-start gap-3.5 py-4 px-3 bg-[#2a1215] border border-[#ff4d4f]/30 shadow-xl rounded-xl animate-slide-up w-100"
+    >
+      <ng-icon name="remixCloseCircleFill" class="text-[#ff4d4f] text-xl shrink-0 mt-0.5" />
+
+      <div class="flex flex-col flex-1 min-w-0">
+        <span class="text-[13px] font-semibold text-[#ff4d4f] mb-1">
+          {{ errorMessage() ? 'Gagal Mengonversi' : 'Sistem Error' }}
+        </span>
+        <pre
+          class="text-[#ffa39e] text-xs font-mono whitespace-pre-wrap leading-relaxed max-h-30 overflow-y-auto custom-scrollbar"
+          >{{ errorMessage() || runError() || runStderr() || runTimedOut() }}</pre>
+      </div>
+
+      <!-- Tombol Tutup -->
+      <button
+        (click)="clearError()"
+        class="text-[#ffa39e] hover:text-[#ff4d4f] transition-colors shrink-0 cursor-pointer"
+      >
+        <ng-icon name="remixCloseFill" class="text-lg" />
+      </button>
+    </div>
+  }
+</div>

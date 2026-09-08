@@ -1,0 +1,109 @@
+<div class="flex items-start animate-fade-in pb-16">
+  <div class="min-w-0 flex-1">
+    <!-- 1. Header Section -->
+    <header class="text-soft flex flex-wrap items-center gap-2 text-[13px] font-medium">
+      <span>Dokumentasi</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span>Sintaks Dasar</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span class="text-strong">Input & Output</span>
+    </header>
+
+    <h1 class="mob:text-[40px] mt-4 text-[30px] font-semibold tracking-[-0.03em] text-balance text-strong">
+      Input & Output
+    </h1>
+
+    <p class="text-sub mob:text-[17px] mt-3.5 text-base leading-7 text-pretty">
+      Interaksi dengan pengguna adalah bagian krusial dari sebuah program. Di dalam aplikasi ini, kita menggunakan perintah <code>input()</code> untuk menerima data dari pengguna, dan <code>output()</code> untuk mencetak hasil ke layar terminal.
+    </p>
+
+    <hr class="my-8 border-line" />
+
+    <!-- 2. Struktur Utama -->
+    <section class="space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Menampilkan Pesan (Output)
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Perintah <code>output()</code> digunakan untuk mencetak teks atau isi dari sebuah variabel. Kamu bisa menggabungkan teks statis dan variabel menggunakan tanda koma.
+      </p>
+
+      <ul class="space-y-6 text-sub leading-7 mt-6">
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">1</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">output("Teks")</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mencetak teks secara langsung. Teks bebas wajib diapit oleh tanda kutip ganda.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">2</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">output(namaVariabel)</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mencetak nilai yang tersimpan di dalam sebuah variabel tanpa tanda kutip.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 3. Struktur Utama -->
+    <section class="mt-14 space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Menerima Masukan (Input)
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Perintah <code>input(namaVariabel)</code> akan menghentikan sementara program untuk menunggu pengguna mengetikkan sesuatu, lalu menyimpannya ke dalam variabel yang dituju. <strong>Ingat:</strong> variabel tersebut harus sudah dideklarasikan di blok Kamus.
+      </p>
+    </section>
+
+    <!-- 4. Code Comparison Section -->
+    <section class="mt-14 space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Contoh Penggunaan
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Berikut adalah contoh program interaktif sederhana yang meminta nama dan umur pengguna, lalu mencetak pesan sapaan.
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Blok Pseudocode -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5">
+            <ng-icon name="remixCodeBoxLine" class="text-sub text-lg" /> Pseudocode
+          </div>
+          <app-code-block
+            [code]="pseudocodeExample"
+            language="pseudocode"
+            class="flex-1"
+          ></app-code-block>
+        </div>
+
+        <!-- Blok Golang -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5">
+            <ng-icon name="remixTerminalWindowLine" class="text-accent-green text-lg" /> Golang
+          </div>
+          <app-code-block [code]="golangExample" language="go" class="flex-1"></app-code-block>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Footer Navigasi -->
+    <div class="flex justify-end pt-8 border-t border-line mt-16">
+      <a
+        routerLink="/docs/operators"
+        class="group flex flex-col items-end px-6 py-4 rounded-2xl border border-line hover:border-line-strong bg-bg-0 hover:bg-bg-weak transition-all duration-300 cursor-pointer"
+      >
+        <span class="text-[13px] font-medium text-sub mb-1 group-hover:text-strong transition-colors">Selanjutnya</span>
+        <span class="text-strong font-semibold flex items-center gap-2 text-base">
+          Operator Matematika
+          <ng-icon name="remixArrowRightSLine" class="text-xl group-hover:translate-x-1 transition-transform" />
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

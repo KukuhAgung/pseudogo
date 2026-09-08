@@ -1,0 +1,130 @@
+<div class="flex items-start animate-fade-in pb-16">
+  <div class="min-w-0 flex-1">
+    <!-- 1. Header Section -->
+    <header class="text-soft flex flex-wrap items-center gap-2 text-[13px] font-medium">
+      <span>Dokumentasi</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span>Struktur Kontrol</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span class="text-strong">Perulangan (For/While)</span>
+    </header>
+
+    <h1 class="mob:text-[40px] mt-4 text-[30px] font-semibold tracking-[-0.03em] text-balance text-strong">
+      Perulangan (For & While)
+    </h1>
+
+    <p class="text-sub mob:text-[17px] mt-3.5 text-base leading-7 text-pretty">
+      Perulangan (<em>looping</em>) digunakan untuk menjalankan satu atau beberapa baris kode secara berulang-ulang. Aplikasi ini mendukung dua jenis perulangan: <code>for</code> (berbasis rentang nilai terukur) dan <code>while</code> (berbasis kondisi logika).
+    </p>
+
+    <hr class="my-8 border-line" />
+
+    <!-- 2. Struktur Utama -->
+    <section class="space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        1. Perulangan For
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Gunakan <code>for</code> ketika kamu sudah tahu pasti berapa kali perulangan tersebut harus dilakukan. Penulisannya membutuhkan nilai awal dan nilai akhir.
+      </p>
+
+      <ul class="space-y-6 text-sub leading-7 mt-6">
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">1</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">for &lt;variabel&gt; &lt;- &lt;awal&gt; to &lt;akhir&gt; do</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mendefinisikan variabel penghitung (<em>counter</em>), nilai awalnya, hingga batas akhirnya. Kata kunci <code>do</code> wajib diletakkan di bagian paling akhir baris.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">2</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">endfor</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Menandai akhir dari blok kode perulangan <code>for</code>. <em>Converter</em> akan otomatis membuat logika penambahan (<code>++</code>) untuk variabel penghitungmu di Golang.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 3. Struktur Utama -->
+    <section class="mt-14 space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        2. Perulangan While
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Gunakan <code>while</code> ketika jumlah perulangan tidak diketahui secara pasti, namun bergantung pada sebuah kondisi yang bisa berubah menjadi <code>false</code> di tengah eksekusi.
+      </p>
+
+      <ul class="space-y-6 text-sub leading-7 mt-6">
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">1</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">while &lt;kondisi&gt; do</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Blok akan terus dieksekusi selama kondisi bernilai <code>true</code>. Kamu wajib memperbarui nilai variabel di dalam blok agar tidak terjadi <em>infinite loop</em> (perulangan tanpa henti).
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5">2</span>
+          <div>
+            <code class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line">endwhile</code>
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Menandai akhir dari blok perulangan <code>while</code>.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. Code Comparison Section -->
+    <section class="mt-14 space-y-6">
+      <h2 class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Contoh Penggunaan
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Berikut adalah perbandingan implementasi antara perulangan <code>for</code> dan <code>while</code> untuk mencetak urutan angka yang sama.
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Blok Pseudocode -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5">
+            <ng-icon name="remixCodeBoxLine" class="text-sub text-lg" /> Pseudocode
+          </div>
+          <app-code-block
+            [code]="pseudocodeExample"
+            language="pseudocode"
+            class="flex-1"
+          ></app-code-block>
+        </div>
+
+        <!-- Blok Golang -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5">
+            <ng-icon name="remixTerminalWindowLine" class="text-accent-green text-lg" /> Golang
+          </div>
+          <app-code-block [code]="golangExample" language="go" class="flex-1"></app-code-block>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Footer Navigasi  -->
+    <div class="flex justify-end pt-8 border-t border-line mt-16">
+      <a
+        routerLink="/"
+        class="group flex flex-col items-end px-6 py-4 rounded-2xl border border-line hover:border-primary-line bg-bg-0 hover:bg-primary-weak transition-all duration-300 cursor-pointer"
+      >
+        <span class="text-[13px] font-medium text-sub mb-1 group-hover:text-primary transition-colors">Dokumentasi Selesai</span>
+        <span class="text-strong font-semibold flex items-center gap-2 text-base group-hover:text-primary transition-colors">
+          Mulai Konversi Kode
+          <ng-icon name="remixArrowRightSLine" class="text-xl group-hover:scale-110 transition-transform" />
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

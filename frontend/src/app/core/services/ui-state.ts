@@ -6,6 +6,7 @@ import { Injectable, signal } from '@angular/core';
 export class UiStateService {
   isDarkMode = signal(false);
   sidebarOpen = signal(false);
+  sidebarDocsOpen = signal(false);
   hasUnreadLog = signal(false);
 
   toggleDarkMode() {
@@ -24,6 +25,10 @@ export class UiStateService {
     if (this.sidebarOpen()) {
       this.hasUnreadLog.set(false);
     }
+  }
+
+  toggleSidebarDocs() {
+    this.sidebarDocsOpen.update((open) => !open);
   }
 
   flagUnreadIfClosed() {

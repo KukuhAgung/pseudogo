@@ -1,7 +1,10 @@
-import { Component, ElementRef, viewChild, afterNextRender, model, effect } from '@angular/core';
+import { Component, ElementRef, viewChild, afterNextRender, model, effect, input } from '@angular/core';
 import { EditorState } from '@codemirror/state';
 import { EditorView, lineNumbers, keymap, gutter, GutterMarker } from '@codemirror/view';
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
+import { syntaxHighlighting } from '@codemirror/language';
+import { go } from '@codemirror/lang-go'
+import { pseudocodeLanguage, adaptiveHighlight } from '../../code-mirror/pseudocode-language';
 
 const INDENT_UNIT = '    ';
 
@@ -82,6 +85,7 @@ const modernTheme = EditorView.theme({
 })
 export class CodeEditor {
   value = model('');
+  language = input<'pseudocode' | 'go'>('pseudocode');
   private host = viewChild.required<ElementRef<HTMLDivElement>>('host');
   private view?: EditorView;
 
@@ -98,6 +102,7 @@ export class CodeEditor {
   }
 
   private initEditor() {
+    const langExtension = this.language() === 'go' ? go() : pseudocodeLanguage;
     const smartEnter = keymap.of([
       {
         key: 'Enter',
@@ -117,8 +122,10 @@ export class CodeEditor {
     const state = EditorState.create({
       doc: this.value(),
       extensions: [
+        langExtension,
         activeLineDotGutter,
         lineNumbers(),
+        syntaxHighlighting(adaptiveHighlight),
         keymap.of([indentWithTab, ...defaultKeymap]),
         smartEnter,
         modernTheme,

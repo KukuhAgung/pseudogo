@@ -271,19 +271,34 @@ func genStmt(s ast.Stmt, sc *Scope, sigTable map[string]*FuncSig, tempCounter *i
 }
 
 func genInputLines(stmt *ast.InputStmt, sc *Scope, sigTable map[string]*FuncSig, tempCounter *int) []string {
-	t := inferType(stmt.Target, sc, sigTable)
-	if t != nil && t.Name == "char" {
-		tmp := fmt.Sprintf("__charInput%d", *tempCounter)
-		*tempCounter++
-		lhs := genLHS(stmt.Target, sc, sigTable)
-		return []string{
-			fmt.Sprintf("var %s string", tmp),
-			fmt.Sprintf("fmt.Scan(&%s)", tmp),
-			fmt.Sprintf("%s = []rune(%s)[0]", lhs, tmp),
+	var lines []string
+	var batch []string
+
+	flushBatch := func() {
+		if len(batch) > 0 {
+			lines = append(lines, fmt.Sprintf("fmt.Scan(%s)", strings.Join(batch, ", ")))
+			batch = nil
 		}
 	}
-	addr := genAddrOf(stmt.Target, sc, sigTable)
-	return []string{fmt.Sprintf("fmt.Scan(%s)", addr)}
+
+	for _, target := range stmt.Targets {
+		t := inferType(target, sc, sigTable)
+		if t != nil && t.Name == "char" {
+			flushBatch()
+			tmp := fmt.Sprintf("__charInput%d", *tempCounter)
+			*tempCounter++
+			lhs := genLHS(target, sc, sigTable)
+			lines = append(lines,
+				fmt.Sprintf("var %s string", tmp),
+				fmt.Sprintf("fmt.Scan(&%s)", tmp),
+				fmt.Sprintf("%s = []rune(%s)[0]", lhs, tmp),
+			)
+			continue
+		}
+		batch = append(batch, genAddrOf(target, sc, sigTable))
+	}
+	flushBatch()
+	return lines
 }
 
 func genLHS(target ast.Expr, sc *Scope, sigTable map[string]*FuncSig) string {

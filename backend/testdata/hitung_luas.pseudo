@@ -13,8 +13,6 @@ Kamus:
 Algoritma:
     input(p)
     input(l)
-    input(hasilLuas)
-    
     HitungLuas(p, l, hasilLuas)
     output("Luas = ", hasilLuas)
 

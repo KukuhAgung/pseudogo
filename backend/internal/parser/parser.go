@@ -126,6 +126,8 @@ func (p *Parser) parseFile() (*ast.File, error) {
 }
 
 func (p *Parser) parseProgram() (*ast.Program, error) {
+	var decls []*ast.Declaration
+
 	if _, err := p.expect(lexer.PROGRAM); err != nil {
 		return nil, err
 	}
@@ -133,16 +135,17 @@ func (p *Parser) parseProgram() (*ast.Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.KAMUS); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.COLON); err != nil {
-		return nil, err
-	}
-	decls, err := p.parseDeclarations()
-	if err != nil {
-		return nil, err
-	}
+	if p.cur().Type == lexer.KAMUS {
+    p.advance()
+    if _, err := p.expect(lexer.COLON); err != nil {
+        return nil, err
+    }
+    d, err := p.parseDeclarations()
+    if err != nil {
+        return nil, err
+    }
+    decls = d
+}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -160,6 +163,7 @@ func (p *Parser) parseProgram() (*ast.Program, error) {
 }
 
 func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
+	var decls []*ast.Declaration
 	if _, err := p.expect(lexer.PROCEDURE); err != nil {
 		return nil, err
 	}
@@ -177,16 +181,17 @@ func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
 	if _, err := p.expect(lexer.RPAREN); err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.KAMUS); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.COLON); err != nil {
-		return nil, err
-	}
-	decls, err := p.parseDeclarations()
-	if err != nil {
-		return nil, err
-	}
+	if p.cur().Type == lexer.KAMUS {
+    p.advance()
+    if _, err := p.expect(lexer.COLON); err != nil {
+        return nil, err
+    }
+    d, err := p.parseDeclarations()
+    if err != nil {
+        return nil, err
+    }
+    decls = d
+}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -207,6 +212,7 @@ func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
 }
 
 func (p *Parser) parseFunction() (*ast.FunctionDecl, error) {
+	var decls []*ast.Declaration
 	if _, err := p.expect(lexer.FUNCTION); err != nil {
 		return nil, err
 	}
@@ -231,16 +237,17 @@ func (p *Parser) parseFunction() (*ast.FunctionDecl, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.KAMUS); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.COLON); err != nil {
-		return nil, err
-	}
-	decls, err := p.parseDeclarations()
-	if err != nil {
-		return nil, err
-	}
+	if p.cur().Type == lexer.KAMUS {
+    p.advance()
+    if _, err := p.expect(lexer.COLON); err != nil {
+        return nil, err
+    }
+    d, err := p.parseDeclarations()
+    if err != nil {
+        return nil, err
+    }
+    decls = d
+}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -449,14 +456,14 @@ func (p *Parser) parseStmt() (ast.Stmt, error) {
 		if _, err := p.expect(lexer.LPAREN); err != nil {
 			return nil, err
 		}
-		target, err := p.parseExpr()
+		targets, err := p.parseExprListUntilRParen()
 		if err != nil {
 			return nil, err
 		}
 		if _, err := p.expect(lexer.RPAREN); err != nil {
 			return nil, err
 		}
-		return &ast.InputStmt{Target: target}, nil
+		return &ast.InputStmt{Targets: targets}, nil
 
 	case lexer.OUTPUT:
 		p.advance()

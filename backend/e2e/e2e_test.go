@@ -7,10 +7,18 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"runtime"
 
 	"pseudogo/internal/codegen"
 	"pseudogo/internal/parser"
 )
+
+func binaryName(base string) string {
+	if runtime.GOOS == "windows" {
+		return base + ".exe"
+	}
+	return base
+}
 
 // convert parses+generates a .pseudo file and returns the formatted Go source.
 func convert(t *testing.T, path string) string {
@@ -39,7 +47,7 @@ func buildAndRun(t *testing.T, goSrc string, stdin string) string {
 	if err := os.WriteFile(srcPath, []byte(goSrc), 0644); err != nil {
 		t.Fatalf("gagal tulis source: %v", err)
 	}
-	binPath := filepath.Join(dir, "prog")
+	binPath := filepath.Join(dir, binaryName("prog"))
 	build := exec.Command("go", "build", "-o", binPath, srcPath)
 	var buildErr bytes.Buffer
 	build.Stderr = &buildErr
@@ -71,7 +79,7 @@ func TestAllTestdataCompiles(t *testing.T) {
 			dir := t.TempDir()
 			srcPath := filepath.Join(dir, "main.go")
 			os.WriteFile(srcPath, []byte(goSrc), 0644)
-			binPath := filepath.Join(dir, "prog")
+			binPath := filepath.Join(dir, binaryName("prog"))
 			build := exec.Command("go", "build", "-o", binPath, srcPath)
 			var buildErr bytes.Buffer
 			build.Stderr = &buildErr

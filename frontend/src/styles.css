@@ -75,6 +75,13 @@
   --breakpoint-mob: 860px;
   --breakpoint-xl: 1180px;
 
+   /* Syntax highlighting (light mode default) */
+  --color-syntax-keyword: #9333ea;
+  --color-syntax-string: #16a34a;
+  --color-syntax-comment: #6b7280;
+  --color-syntax-number: #d97706;
+  --color-syntax-operator: #db2777;
+
   --color-scrollbar: #a3a3a3;
 }
 
@@ -95,6 +102,12 @@
     --color-primary-weak: #3a1519;
     --color-primary-line: #5e2229;
     --color-scrollbar: #252525;
+
+    --color-syntax-keyword: #c084fc;
+    --color-syntax-string: #86efac;
+    --color-syntax-comment: #9ca3af;
+    --color-syntax-number: #fbbf24;
+    --color-syntax-operator: #f472b6;
   }
 }
 

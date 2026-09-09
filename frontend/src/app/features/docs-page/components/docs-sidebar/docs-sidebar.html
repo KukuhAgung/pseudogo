@@ -1,8 +1,18 @@
 <nav class="h-[90vh] p-6 flex flex-col font-sans text-sm gap-8">
   <div>
-    <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider mb-3">
-      Getting Started
-    </h3>
+    <div class="flex items-center justify-between mb-3 md:mb-5">
+      <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider">
+        Getting Started
+      </h3>
+
+      <button
+        (click)="ui.toggleSidebarDocs()"
+        class="md:hidden p-1.5 rounded-md text-soft hover:bg-line hover:text-strong transition-colors cursor-pointer leading-none"
+        title="Tutup Terminal"
+      >
+        <ng-icon name="remixCloseFill" class="text-xl" />
+      </button>
+    </div>
 
     <div class="border-l border-line flex flex-col">
       <a

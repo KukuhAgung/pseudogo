@@ -3,12 +3,12 @@
     <a
       routerLink="/"
       routerLinkActive="bg-bg-weak font-bold"
-      [routerLinkActiveOptions]="{exact: true}"
+      [routerLinkActiveOptions]="{ exact: true }"
       class="text-sub hover:bg-bg-weak rounded-lg px-3 py-1.75 text-sm font-medium tracking-[-0.006em] whitespace-nowrap"
     >
       <span class="text-sm font-medium">Converter</span>
     </a>
-    
+
     <a
       routerLink="/docs"
       routerLinkActive="bg-bg-weak font-bold"
@@ -17,7 +17,7 @@
       <span class="text-sm font-medium">Dokumentasi</span>
     </a>
   </div>
-  
+
   <div class="flex items-center p-2 gap-4">
     <button
       (click)="ui.toggleDarkMode()"
@@ -29,16 +29,30 @@
         <ng-icon name="remixMoonLine" />
       }
     </button>
-    <div class="w-px h-3 bg-line-strong rounded-full"></div>
 
-    <button
-      (click)="ui.toggleSidebar()"
-      class="relative cursor-pointer border-line text-sub hover:bg-bg-weak flex size-8.5 shrink-0 items-center justify-center rounded-md border"
-    >
-      <ng-icon name="remixTerminalFill" />
-      @if (ui.hasUnreadLog()) {
-        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-      }
-    </button>
+    <div class="md:hidden w-px h-3 bg-line-strong rounded-full"></div>
+
+    <!-- DocsSidebar Menu (Mobile) -->
+    @if (router.url.includes('/docs')) {
+      <button
+        (click)="ui.toggleSidebarDocs()"
+        class="flex md:hidden relative cursor-pointer border-line text-sub hover:bg-bg-weak size-8.5 shrink-0 items-center justify-center rounded-md border"
+      >
+        <ng-icon name="remixMenuFill" title="Daftar Materi" />
+      </button>
+    } @else {
+      <button
+        (click)="ui.toggleSidebar()"
+        class="flex relative cursor-pointer border-line text-sub hover:bg-bg-weak size-8.5 shrink-0 items-center justify-center rounded-md border"
+      >
+        <ng-icon name="remixTerminalFill" />
+
+        @if (ui.hasUnreadLog()) {
+          <span
+            class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-bg-0"
+          ></span>
+        }
+      </button>
+    }
   </div>
 </nav>

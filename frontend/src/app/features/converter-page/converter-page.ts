@@ -4,7 +4,7 @@ import { Converter } from '../../core/services/converter';
 import { CodeEditor } from '../../shared/components/code-editor/code-editor';
 import { UiStateService } from '../../core/services/ui-state';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { remixTerminalFill, remixCloseFill, remixErrorWarningLine } from '@ng-icons/remixicon';
+import { remixTerminalFill, remixCloseFill, remixErrorWarningLine, remixFileCodeFill } from '@ng-icons/remixicon';
 import { boxGoLangLogo } from '@ng-icons/boxicons/logos';
 
 @Component({
@@ -12,7 +12,7 @@ import { boxGoLangLogo } from '@ng-icons/boxicons/logos';
   standalone: true,
   imports: [FormsModule, CodeEditor, NgIcon],
   providers: [
-    provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine, boxGoLangLogo }),
+    provideIcons({ remixTerminalFill, remixCloseFill, remixErrorWarningLine, boxGoLangLogo, remixFileCodeFill }),
   ],
   templateUrl: './converter-page.html',
   styleUrl: './converter-page.css',
@@ -44,6 +44,7 @@ export class ConverterPage {
   onConvert() {
     this.isLoading.set(true);
     this.errorMessage.set('');
+    this.stdinInput.set('');
     this.converter.convert(this.pseudocode()).subscribe({
       next: (result) => {
         this.goCode.set(result);
@@ -78,6 +79,7 @@ export class ConverterPage {
       error: (err) => {
         this.runError.set(err.message ?? 'Terjadi kesalahan');
         this.isRunning.set(false);
+        this.ui.sidebarOpen.set(false);
       },
     });
   }

@@ -1,7 +1,5 @@
 package ast
 
-// File is the root node: one optional Program plus any number of
-// top-level procedures/functions, in the order they appeared in source.
 type File struct {
 	Program    *Program
 	Procedures []*ProcedureDecl
@@ -14,10 +12,8 @@ type Program struct {
 	Body  []Stmt
 }
 
-// Type represents a pseudocode type: a scalar keyword type or an array type.
 type Type struct {
 	Name string // "integer", "real", "boolean", "char", "string", or "array"
-	// Only set when Name == "array"
 	ElemType *Type
 	Lower    Expr
 	Upper    Expr
@@ -29,7 +25,7 @@ type Declaration struct {
 	Names      []string
 	Type       *Type
 	IsConstant bool
-	ConstValue Expr // only when IsConstant
+	ConstValue Expr
 }
 
 type ParamMode int
@@ -66,12 +62,12 @@ type FunctionDecl struct {
 type Stmt interface{ stmtNode() }
 
 type AssignStmt struct {
-	Target Expr // Ident or IndexExpr
+	Target Expr
 	Value  Expr
 }
 
 type InputStmt struct {
-	Target Expr
+	Targets []Expr
 }
 
 type OutputStmt struct {
@@ -87,7 +83,7 @@ type IfStmt struct {
 	Cond    Expr
 	Then    []Stmt
 	ElseIfs []*ElseIfClause
-	Else    []Stmt // nil if no else
+	Else    []Stmt 
 }
 
 type ForStmt struct {
@@ -107,7 +103,6 @@ type RepeatStmt struct {
 	Until Expr
 }
 
-// CallStmt is a procedure invocation used as a statement.
 type CallStmt struct {
 	Name string
 	Args []Expr
@@ -154,7 +149,6 @@ type IndexExpr struct {
 	Index Expr
 }
 
-// CallExpr is a function invocation used as an expression.
 type CallExpr struct {
 	Name string
 	Args []Expr

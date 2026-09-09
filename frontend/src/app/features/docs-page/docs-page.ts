@@ -1,7 +1,8 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, inject } from '@angular/core';
 import { filter, Subscription } from 'rxjs';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { DocsSidebar } from './components/docs-sidebar/docs-sidebar';
+import { UiStateService } from '../../core/services/ui-state';
 
 @Component({
   imports: [DocsSidebar, RouterOutlet],
@@ -10,6 +11,7 @@ import { DocsSidebar } from './components/docs-sidebar/docs-sidebar';
   templateUrl: './docs-page.html',
 })
 export class DocsPage implements OnInit, OnDestroy {
+  ui = inject(UiStateService)
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   private routerSub!: Subscription;

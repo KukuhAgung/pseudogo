@@ -206,6 +206,7 @@ func (l *Lexer) next() (Token, error) {
 
 	// Single-char tokens
 	single := map[rune]TokenType{
+		'.': DOT,
 		':': COLON,
 		',': COMMA,
 		'(': LPAREN,

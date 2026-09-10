@@ -1,25 +1,39 @@
 package ast
 
 type File struct {
-	Program    *Program
-	Procedures []*ProcedureDecl
-	Functions  []*FunctionDecl
+	GlobalTypes     []*TypeDecl
+	GlobalConstants []*Declaration
+	Program         *Program
+	Procedures      []*ProcedureDecl
+	Functions       []*FunctionDecl
 }
 
 type Program struct {
 	Name  string
+	Types []*TypeDecl
 	Kamus []*Declaration
 	Body  []Stmt
 }
 
 type Type struct {
-	Name string // "integer", "real", "boolean", "char", "string", or "array"
+	Name     string // "integer","real","boolean","char","string","array","record", atau nama tipe bentukan
 	ElemType *Type
 	Lower    Expr
 	Upper    Expr
+	Fields   []*RecordField 
 }
 
 func (t *Type) IsArray() bool { return t != nil && t.Name == "array" }
+
+type RecordField struct {
+	Name string
+	Type *Type
+}
+
+type TypeDecl struct {
+	Name string
+	Type *Type
+}
 
 type Declaration struct {
 	Names      []string
@@ -45,6 +59,7 @@ type Param struct {
 type ProcedureDecl struct {
 	Name   string
 	Params []*Param
+	Types  []*TypeDecl
 	Kamus  []*Declaration
 	Body   []Stmt
 }
@@ -53,6 +68,7 @@ type FunctionDecl struct {
 	Name       string
 	Params     []*Param
 	ReturnType *Type
+	Types      []*TypeDecl
 	Kamus      []*Declaration
 	Body       []Stmt
 }
@@ -83,7 +99,7 @@ type IfStmt struct {
 	Cond    Expr
 	Then    []Stmt
 	ElseIfs []*ElseIfClause
-	Else    []Stmt 
+	Else    []Stmt
 }
 
 type ForStmt struct {
@@ -134,13 +150,13 @@ type CharLit struct{ Value rune }
 type BoolLit struct{ Value bool }
 
 type BinaryExpr struct {
-	Op    string // "+","-","*","/","div","mod","and","or","=","!=","<",">","<=",">="
+	Op    string
 	Left  Expr
 	Right Expr
 }
 
 type UnaryExpr struct {
-	Op      string // "-", "not"
+	Op      string
 	Operand Expr
 }
 
@@ -149,18 +165,24 @@ type IndexExpr struct {
 	Index Expr
 }
 
+type FieldAccessExpr struct {
+	Base  Expr
+	Field string
+}
+
 type CallExpr struct {
 	Name string
 	Args []Expr
 }
 
-func (*Ident) exprNode()      {}
-func (*IntLit) exprNode()     {}
-func (*RealLit) exprNode()    {}
-func (*StringLit) exprNode()  {}
-func (*CharLit) exprNode()    {}
-func (*BoolLit) exprNode()    {}
-func (*BinaryExpr) exprNode() {}
-func (*UnaryExpr) exprNode()  {}
-func (*IndexExpr) exprNode()  {}
-func (*CallExpr) exprNode()   {}
+func (*Ident) exprNode()           {}
+func (*IntLit) exprNode()          {}
+func (*RealLit) exprNode()         {}
+func (*StringLit) exprNode()       {}
+func (*CharLit) exprNode()         {}
+func (*BoolLit) exprNode()         {}
+func (*BinaryExpr) exprNode()      {}
+func (*UnaryExpr) exprNode()       {}
+func (*IndexExpr) exprNode()       {}
+func (*FieldAccessExpr) exprNode() {}
+func (*CallExpr) exprNode()        {}

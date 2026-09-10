@@ -1,4 +1,7 @@
-procedure SequentialSearch(in arr : array [1..N] of integer, in N : integer, in X : integer, out idx : integer)
+constant NMAX : integer = 5
+type arr_int : array [1..NMAX] of integer
+
+procedure SequentialSearch(in arr : arr_int, in N : integer, in X : integer, out idx : integer)
 Kamus:
     i : integer
     ketemu : boolean
@@ -23,7 +26,7 @@ end procedure
 
 Program TestSequentialSearch
 Kamus:
-    data : array [1..5] of integer
+    data : arr_int
     hasil : integer
 Algoritma:
     data[1] <- 10

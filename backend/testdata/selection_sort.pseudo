@@ -1,4 +1,7 @@
-procedure SelectionSort(inout arr : array [1..N] of integer, in N : integer)
+constant NMAX : integer = 6
+type arr_int : array [1..NMAX] of integer
+
+procedure SelectionSort(inout arr : arr_int, in N : integer)
 Kamus:
     i, j, minIdx, temp : integer
 Algoritma:
@@ -18,7 +21,7 @@ end procedure
 
 Program TestSelectionSort
 Kamus:
-    data : array [1..6] of integer
+    data : arr_int
     i : integer
 Algoritma:
     data[1] <- 64

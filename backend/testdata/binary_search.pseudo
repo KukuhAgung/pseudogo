@@ -1,4 +1,7 @@
-procedure BinarySearch(in arr : array [1..N] of integer, in N : integer, in X : integer, out idx : integer)
+constant NMAX : integer = 8
+type arr_int : array [1..NMAX] of integer
+
+procedure BinarySearch(in arr : arr_int, in N : integer, in X : integer, out idx : integer)
 Kamus:
     kiri, kanan, tengah : integer
     ketemu : boolean
@@ -24,7 +27,7 @@ end procedure
 
 Program TestBinarySearch
 Kamus:
-    data : array [1..8] of integer
+    data : arr_int
     hasil : integer
 Algoritma:
     data[1] <- 2

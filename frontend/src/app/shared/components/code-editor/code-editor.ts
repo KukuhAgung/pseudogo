@@ -4,7 +4,7 @@ import { EditorView, lineNumbers, keymap, gutter, GutterMarker } from '@codemirr
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 import { syntaxHighlighting } from '@codemirror/language';
 import { go } from '@codemirror/lang-go'
-import { pseudocodeLanguage, adaptiveHighlight } from '../../code-mirror/pseudocode-language';
+import { pseudocodeLanguage, codeEditorHighlight } from '../../code-mirror/pseudocode-language';
 
 const INDENT_UNIT = '    ';
 
@@ -125,7 +125,7 @@ export class CodeEditor {
         langExtension,
         activeLineDotGutter,
         lineNumbers(),
-        syntaxHighlighting(adaptiveHighlight),
+        syntaxHighlighting(codeEditorHighlight),
         keymap.of([indentWithTab, ...defaultKeymap]),
         smartEnter,
         modernTheme,

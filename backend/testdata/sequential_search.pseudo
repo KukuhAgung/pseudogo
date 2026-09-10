@@ -14,15 +14,15 @@ Algoritma:
             ketemu <- true
         else
             i <- i + 1
-        end if
+        endif
     end while
 
     if (ketemu = true) then
         idx <- i
     else
         idx <- -1
-    end if
-end procedure
+    endif
+endprocedure
 
 Program TestSequentialSearch
 Kamus:
@@ -35,6 +35,6 @@ Algoritma:
     data[4] <- 42
     data[5] <- 3
     SequentialSearch(data, 5, 42, hasil)
-    output("Indeks ditemukan (1-based): ", hasil)
+    output("Indeks ditemukan (1-based): ", hasil, "\n")
     SequentialSearch(data, 5, 999, hasil)
-    output("Hasil pencarian tidak ada: ", hasil)
+    output("Hasil pencarian tidak ada: ", hasil, "\n")

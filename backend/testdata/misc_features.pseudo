@@ -6,9 +6,9 @@ Algoritma:
         hasil <- true
     else
         hasil <- false
-    end if
+    endif
     return hasil
-end function
+endfunction
 
 Program TestMisc
 Kamus:
@@ -19,27 +19,27 @@ Kamus:
     hitungan : integer
 Algoritma:
     namaMahasiswa <- "Budi"
-    output("Nama mahasiswa: ", namaMahasiswa)
+    output("Nama mahasiswa: ", namaMahasiswa, "\n")
 
     nilai <- 85
     if (nilai >= 80) then
-        output("Indeks A")
+        output("Indeks A", "\n")
     else if (nilai >= 70) then
-        output("Indeks B")
+        output("Indeks B", "\n")
     else
-        output("Indeks C")
-    end if
+        output("Indeks C", "\n")
+    endif
 
     indeks <- 'A'
-    output("Indeks huruf: ", indeks)
+    output("Indeks huruf: ", indeks, "\n")
 
-    output("Nilai PHI: ", PHI)
+    output("Nilai PHI: ", PHI, "\n")
 
-    output("6 genap? ", CekGenap(6))
-    output("7 genap? ", CekGenap(7))
+    output("6 genap? ", CekGenap(6), "\n")
+    output("7 genap? ", CekGenap(7), "\n")
 
     hitungan <- 0
     repeat
         hitungan <- hitungan + 1
-        output("Hitungan ke: ", hitungan)
+        output("Hitungan ke: ", hitungan, "\n")
     until (hitungan = 3)

@@ -6,10 +6,10 @@ import (
 )
 
 type Lexer struct {
-	src     []rune
-	pos     int
-	line    int
-	col     int
+	src      []rune
+	pos      int
+	line     int
+	col      int
 	filename string
 }
 
@@ -148,9 +148,24 @@ func (l *Lexer) next() (Token, error) {
 				return Token{}, &LexError{Line: line, Col: col, Msg: "string literal tidak ditutup"}
 			}
 			ch := l.advance()
-			if ch == '\\' && l.peekRune() == '"' {
-				sb.WriteRune(l.advance())
-				continue
+			if ch == '\\' {
+				switch l.peekRune() {
+				case '"':
+					sb.WriteRune(l.advance())
+					continue
+				case 'n':
+					l.advance()
+					sb.WriteRune('\n')
+					continue
+				case 't':
+					l.advance()
+					sb.WriteRune('\t')
+					continue
+				case '\\':
+					l.advance()
+					sb.WriteRune('\\')
+					continue
+				}
 			}
 			sb.WriteRune(ch)
 		}

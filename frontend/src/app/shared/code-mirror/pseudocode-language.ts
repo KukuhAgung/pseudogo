@@ -76,11 +76,13 @@ export const fixedDarkHighlight = HighlightStyle.define([
   { tag: t.typeName, color: '#60a5fa' },
 ]);
 
-export const adaptiveHighlight = HighlightStyle.define([
+export const codeEditorHighlight = HighlightStyle.define([
   { tag: t.keyword, color: 'var(--color-syntax-keyword)' },
   { tag: t.string, color: 'var(--color-syntax-string)' },
   { tag: t.comment, color: 'var(--color-syntax-comment)', fontStyle: 'italic' },
   { tag: t.number, color: 'var(--color-syntax-number)' },
   { tag: t.variableName, color: 'var(--color-strong)' },
   { tag: t.operator, color: 'var(--color-syntax-operator)' },
+  { tag: t.function(t.variableName), color: 'var(--color-syntax-function)' },
+  { tag: t.typeName, color: 'var(--color-syntax-function)' },
 ]);

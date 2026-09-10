@@ -21,9 +21,9 @@ Algoritma:
             kiri <- tengah + 1
         else
             kanan <- tengah - 1
-        end if
+        endif
     end while
-end procedure
+endprocedure
 
 Program TestBinarySearch
 Kamus:
@@ -39,6 +39,6 @@ Algoritma:
     data[7] <- 38
     data[8] <- 45
     BinarySearch(data, 8, 23, hasil)
-    output("Indeks 23 (1-based): ", hasil)
+    output("Indeks 23 (1-based): ", hasil, "\n")
     BinarySearch(data, 8, 100, hasil)
-    output("Hasil pencarian tidak ada: ", hasil)
+    output("Hasil pencarian tidak ada: ", hasil, "\n")

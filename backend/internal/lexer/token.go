@@ -15,6 +15,7 @@ const (
 	CHAR_LIT
 
 	// Keywords
+	TYPE
 	PROGRAM
 	KAMUS
 	ALGORITMA
@@ -53,67 +54,79 @@ const (
 	FALSE
 
 	// Punctuation / operators
-	COLON      // :
-	COMMA      // ,
-	LPAREN     // (
-	RPAREN     // )
-	LBRACKET   // [
-	RBRACKET   // ]
-	DOTDOT     // ..
-	ASSIGN     // <-
-	RETURNS    // ->
-	PLUS       // +
-	MINUS      // -
-	STAR       // *
-	SLASH      // /
-	EQ         // =
-	NEQ        // != or <>
-	LT         // <
-	GT         // >
-	LE         // <=
-	GE         // >=
+	COLON    // :
+	COMMA    // ,
+	LPAREN   // (
+	RPAREN   // )
+	LBRACKET // [
+	RBRACKET // ]
+	DOT      // .
+	DOTDOT   // ..
+	ASSIGN   // <-
+	RETURNS  // ->
+	PLUS     // +
+	MINUS    // -
+	STAR     // *
+	SLASH    // /
+	EQ       // =
+	NEQ      // != or <>
+	LT       // <
+	GT       // >
+	LE       // <=
+	GE       // >=
 
 	ENDPROGRAM
+	ENDIF
+	ENDFOR
+	ENDWHILE
+	ENDPROCEDURE
+	ENDFUNCTION
 )
 
 var keywords = map[string]TokenType{
-	"program":    PROGRAM,
-	"endprogram": ENDPROGRAM,
-	"kamus":      KAMUS,
-	"algoritma":  ALGORITMA,
-	"constant":   CONSTANT,
-	"integer":    KW_INTEGER,
-	"real":       KW_REAL,
-	"boolean":    KW_BOOLEAN,
-	"char":       KW_CHAR,
-	"string":     KW_STRING,
-	"array":      ARRAY,
-	"of":         OF,
-	"input":      INPUT,
-	"output":     OUTPUT,
-	"if":         IF,
-	"then":       THEN,
-	"else":       ELSE,
-	"end":        END,
-	"for":        FOR,
-	"to":         TO,
-	"do":         DO,
-	"while":      WHILE,
-	"until":      UNTIL,
-	"repeat":     REPEAT,
-	"procedure":  PROCEDURE,
-	"function":   FUNCTION,
-	"return":     RETURN,
-	"in":         IN,
-	"out":        OUT,
-	"inout":      INOUT,
-	"and":        AND,
-	"or":         OR,
-	"not":        NOT,
-	"div":        DIV,
-	"mod":        MOD,
-	"true":       TRUE,
-	"false":      FALSE,
+	"type":         TYPE,
+	"program":      PROGRAM,
+	"endprogram":   ENDPROGRAM,
+	"kamus":        KAMUS,
+	"algoritma":    ALGORITMA,
+	"constant":     CONSTANT,
+	"integer":      KW_INTEGER,
+	"real":         KW_REAL,
+	"boolean":      KW_BOOLEAN,
+	"char":         KW_CHAR,
+	"string":       KW_STRING,
+	"array":        ARRAY,
+	"of":           OF,
+	"input":        INPUT,
+	"output":       OUTPUT,
+	"if":           IF,
+	"then":         THEN,
+	"else":         ELSE,
+	"end":          END,
+	"for":          FOR,
+	"to":           TO,
+	"do":           DO,
+	"while":        WHILE,
+	"until":        UNTIL,
+	"repeat":       REPEAT,
+	"procedure":    PROCEDURE,
+	"function":     FUNCTION,
+	"return":       RETURN,
+	"in":           IN,
+	"out":          OUT,
+	"inout":        INOUT,
+	"and":          AND,
+	"or":           OR,
+	"not":          NOT,
+	"div":          DIV,
+	"mod":          MOD,
+	"true":         TRUE,
+	"false":        FALSE,
+	"endif":        ENDIF,
+	"endfor":       ENDFOR,
+	"endwhile":     ENDWHILE,
+	"endprocedure": ENDPROCEDURE,
+	"endfunction":  ENDFUNCTION,
 }
 
 func LookupIdent(ident string) TokenType {

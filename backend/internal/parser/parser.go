@@ -37,12 +37,6 @@ func Parse(src, filename string) (*ast.File, error) {
 }
 
 func (p *Parser) cur() lexer.Token { return p.toks[p.pos] }
-func (p *Parser) peekN(n int) lexer.Token {
-	if p.pos+n >= len(p.toks) {
-		return p.toks[len(p.toks)-1]
-	}
-	return p.toks[p.pos+n]
-}
 
 func (p *Parser) advance() lexer.Token {
 	t := p.toks[p.pos]
@@ -61,6 +55,7 @@ func tokTypeName(tt lexer.TokenType) string {
 		lexer.EOF: "EOF", lexer.IDENT: "identifier", lexer.INT_LIT: "int literal",
 		lexer.REAL_LIT: "real literal", lexer.STRING_LIT: "string literal", lexer.CHAR_LIT: "char literal",
 		lexer.PROGRAM: "Program", lexer.KAMUS: "Kamus", lexer.ALGORITMA: "Algoritma",
+		lexer.ENDPROGRAM: "EndProgram", lexer.TYPE: "type",
 		lexer.CONSTANT: "constant", lexer.KW_INTEGER: "integer", lexer.KW_REAL: "real",
 		lexer.KW_BOOLEAN: "boolean", lexer.KW_CHAR: "char", lexer.KW_STRING: "string",
 		lexer.ARRAY: "array", lexer.OF: "of", lexer.INPUT: "input", lexer.OUTPUT: "output",
@@ -71,10 +66,12 @@ func tokTypeName(tt lexer.TokenType) string {
 		lexer.INOUT: "inout", lexer.AND: "and", lexer.OR: "or", lexer.NOT: "not",
 		lexer.DIV: "div", lexer.MOD: "mod", lexer.TRUE: "true", lexer.FALSE: "false",
 		lexer.COLON: "':'", lexer.COMMA: "','", lexer.LPAREN: "'('", lexer.RPAREN: "')'",
-		lexer.LBRACKET: "'['", lexer.RBRACKET: "']'", lexer.DOTDOT: "'..'", lexer.ASSIGN: "'<-'",
-		lexer.RETURNS: "'->'", lexer.PLUS: "'+'", lexer.MINUS: "'-'", lexer.STAR: "'*'",
-		lexer.SLASH: "'/'", lexer.EQ: "'='", lexer.NEQ: "'!='", lexer.LT: "'<'", lexer.GT: "'>'",
-		lexer.LE: "'<='", lexer.GE: "'>='",
+		lexer.LBRACKET: "'['", lexer.RBRACKET: "']'", lexer.DOTDOT: "'..'", lexer.DOT: "'.'",
+		lexer.ASSIGN: "'<-'", lexer.RETURNS: "'->'", lexer.PLUS: "'+'", lexer.MINUS: "'-'",
+		lexer.STAR: "'*'", lexer.SLASH: "'/'", lexer.EQ: "'='", lexer.NEQ: "'!='",
+		lexer.LT: "'<'", lexer.GT: "'>'", lexer.LE: "'<='", lexer.GE: "'>='",
+		lexer.ENDIF: "endif", lexer.ENDFOR: "endfor", lexer.ENDWHILE: "endwhile",
+		lexer.ENDPROCEDURE: "endprocedure", lexer.ENDFUNCTION: "endfunction",
 	}
 	if n, ok := names[tt]; ok {
 		return n
@@ -90,12 +87,38 @@ func (p *Parser) expect(tt lexer.TokenType) (lexer.Token, error) {
 	return p.advance(), nil
 }
 
+func (p *Parser) expectBlockEnd(combined lexer.TokenType, specific lexer.TokenType) error {
+	if p.cur().Type == combined {
+		p.advance()
+		return nil
+	}
+	if _, err := p.expect(lexer.END); err != nil {
+		return err
+	}
+	if _, err := p.expect(specific); err != nil {
+		return err
+	}
+	return nil
+}
+
 // ---- Top level ----
 
 func (p *Parser) parseFile() (*ast.File, error) {
 	file := &ast.File{}
 	for p.cur().Type != lexer.EOF {
 		switch p.cur().Type {
+		case lexer.TYPE:
+			td, err := p.parseTypeDecl()
+			if err != nil {
+				return nil, err
+			}
+			file.GlobalTypes = append(file.GlobalTypes, td)
+		case lexer.CONSTANT:
+			decl, err := p.parseDeclaration()
+			if err != nil {
+				return nil, err
+			}
+			file.GlobalConstants = append(file.GlobalConstants, decl)
 		case lexer.PROGRAM:
 			if file.Program != nil {
 				return nil, p.errf(p.cur(), "hanya boleh ada satu blok Program per file")
@@ -118,16 +141,25 @@ func (p *Parser) parseFile() (*ast.File, error) {
 			}
 			file.Functions = append(file.Functions, fn)
 		default:
-			return nil, p.errf(p.cur(), "diharapkan Program, procedure, atau function di level atas, ditemukan %s (%q)",
+			return nil, p.errf(p.cur(), "diharapkan type, constant, Program, procedure, atau function di level atas, ditemukan %s (%q)",
 				tokTypeName(p.cur().Type), p.cur().Literal)
 		}
 	}
 	return file, nil
 }
 
-func (p *Parser) parseProgram() (*ast.Program, error) {
-	var decls []*ast.Declaration
+func (p *Parser) parseKamusSection() ([]*ast.Declaration, []*ast.TypeDecl, error) {
+	if p.cur().Type != lexer.KAMUS {
+		return nil, nil, nil
+	}
+	p.advance()
+	if _, err := p.expect(lexer.COLON); err != nil {
+		return nil, nil, err
+	}
+	return p.parseDeclarations()
+}
 
+func (p *Parser) parseProgram() (*ast.Program, error) {
 	if _, err := p.expect(lexer.PROGRAM); err != nil {
 		return nil, err
 	}
@@ -135,17 +167,10 @@ func (p *Parser) parseProgram() (*ast.Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	if p.cur().Type == lexer.KAMUS {
-    p.advance()
-    if _, err := p.expect(lexer.COLON); err != nil {
-        return nil, err
-    }
-    d, err := p.parseDeclarations()
-    if err != nil {
-        return nil, err
-    }
-    decls = d
-}
+	decls, types, err := p.parseKamusSection()
+	if err != nil {
+		return nil, err
+	}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -159,11 +184,10 @@ func (p *Parser) parseProgram() (*ast.Program, error) {
 	if p.cur().Type == lexer.ENDPROGRAM {
 		p.advance()
 	}
-	return &ast.Program{Name: nameTok.Literal, Kamus: decls, Body: body}, nil
+	return &ast.Program{Name: nameTok.Literal, Types: types, Kamus: decls, Body: body}, nil
 }
 
 func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
-	var decls []*ast.Declaration
 	if _, err := p.expect(lexer.PROCEDURE); err != nil {
 		return nil, err
 	}
@@ -181,17 +205,10 @@ func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
 	if _, err := p.expect(lexer.RPAREN); err != nil {
 		return nil, err
 	}
-	if p.cur().Type == lexer.KAMUS {
-    p.advance()
-    if _, err := p.expect(lexer.COLON); err != nil {
-        return nil, err
-    }
-    d, err := p.parseDeclarations()
-    if err != nil {
-        return nil, err
-    }
-    decls = d
-}
+	decls, types, err := p.parseKamusSection()
+	if err != nil {
+		return nil, err
+	}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -202,17 +219,13 @@ func (p *Parser) parseProcedure() (*ast.ProcedureDecl, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.END); err != nil {
+	if err := p.expectBlockEnd(lexer.ENDPROCEDURE, lexer.PROCEDURE); err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.PROCEDURE); err != nil {
-		return nil, err
-	}
-	return &ast.ProcedureDecl{Name: nameTok.Literal, Params: params, Kamus: decls, Body: body}, nil
+	return &ast.ProcedureDecl{Name: nameTok.Literal, Params: params, Types: types, Kamus: decls, Body: body}, nil
 }
 
 func (p *Parser) parseFunction() (*ast.FunctionDecl, error) {
-	var decls []*ast.Declaration
 	if _, err := p.expect(lexer.FUNCTION); err != nil {
 		return nil, err
 	}
@@ -237,17 +250,10 @@ func (p *Parser) parseFunction() (*ast.FunctionDecl, error) {
 	if err != nil {
 		return nil, err
 	}
-	if p.cur().Type == lexer.KAMUS {
-    p.advance()
-    if _, err := p.expect(lexer.COLON); err != nil {
-        return nil, err
-    }
-    d, err := p.parseDeclarations()
-    if err != nil {
-        return nil, err
-    }
-    decls = d
-}
+	decls, types, err := p.parseKamusSection()
+	if err != nil {
+		return nil, err
+	}
 	if _, err := p.expect(lexer.ALGORITMA); err != nil {
 		return nil, err
 	}
@@ -258,13 +264,10 @@ func (p *Parser) parseFunction() (*ast.FunctionDecl, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.END); err != nil {
+	if err := p.expectBlockEnd(lexer.ENDFUNCTION, lexer.FUNCTION); err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.FUNCTION); err != nil {
-		return nil, err
-	}
-	return &ast.FunctionDecl{Name: nameTok.Literal, Params: params, ReturnType: retType, Kamus: decls, Body: body}, nil
+	return &ast.FunctionDecl{Name: nameTok.Literal, Params: params, ReturnType: retType, Types: types, Kamus: decls, Body: body}, nil
 }
 
 func (p *Parser) parseParamList() ([]*ast.Param, error) {
@@ -287,8 +290,6 @@ func (p *Parser) parseParamList() ([]*ast.Param, error) {
 }
 
 func (p *Parser) parseParam() (*ast.Param, error) {
-	// Mode prefix (in/out/inout) is optional — function params in the spec
-	// omit it entirely and default to "in" (read-only, pass by value).
 	mode := ast.ModeIn
 	switch p.cur().Type {
 	case lexer.IN:
@@ -315,18 +316,72 @@ func (p *Parser) parseParam() (*ast.Param, error) {
 	return &ast.Param{Mode: mode, Name: nameTok.Literal, Type: typ}, nil
 }
 
-// ---- Declarations & types ----
+// ---- Declarations, types & type declarations ----
 
-func (p *Parser) parseDeclarations() ([]*ast.Declaration, error) {
+func (p *Parser) parseDeclarations() ([]*ast.Declaration, []*ast.TypeDecl, error) {
 	var decls []*ast.Declaration
-	for p.cur().Type == lexer.IDENT || p.cur().Type == lexer.CONSTANT {
+	var types []*ast.TypeDecl
+	for p.cur().Type == lexer.IDENT || p.cur().Type == lexer.CONSTANT || p.cur().Type == lexer.TYPE {
+		if p.cur().Type == lexer.TYPE {
+			td, err := p.parseTypeDecl()
+			if err != nil {
+				return nil, nil, err
+			}
+			types = append(types, td)
+			continue
+		}
 		decl, err := p.parseDeclaration()
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		decls = append(decls, decl)
 	}
-	return decls, nil
+	return decls, types, nil
+}
+
+func (p *Parser) parseTypeDecl() (*ast.TypeDecl, error) {
+	if _, err := p.expect(lexer.TYPE); err != nil {
+		return nil, err
+	}
+	nameTok, err := p.expect(lexer.IDENT)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := p.expect(lexer.COLON); err != nil {
+		return nil, err
+	}
+
+	if p.cur().Type == lexer.LT {
+		p.advance()
+		var fields []*ast.RecordField
+		for p.cur().Type != lexer.GT {
+			fNameTok, err := p.expect(lexer.IDENT)
+			if err != nil {
+				return nil, err
+			}
+			if _, err := p.expect(lexer.COLON); err != nil {
+				return nil, err
+			}
+			fType, err := p.parseType()
+			if err != nil {
+				return nil, err
+			}
+			fields = append(fields, &ast.RecordField{Name: fNameTok.Literal, Type: fType})
+			if p.cur().Type == lexer.COMMA {
+				p.advance()
+			}
+		}
+		if _, err := p.expect(lexer.GT); err != nil {
+			return nil, err
+		}
+		return &ast.TypeDecl{Name: nameTok.Literal, Type: &ast.Type{Name: "record", Fields: fields}}, nil
+	}
+
+	t, err := p.parseType()
+	if err != nil {
+		return nil, err
+	}
+	return &ast.TypeDecl{Name: nameTok.Literal, Type: t}, nil
 }
 
 func (p *Parser) parseDeclaration() (*ast.Declaration, error) {
@@ -422,6 +477,10 @@ func (p *Parser) parseType() (*ast.Type, error) {
 	case lexer.KW_STRING:
 		p.advance()
 		return &ast.Type{Name: "string"}, nil
+	case lexer.IDENT:
+		// referensi ke tipe bentukan yang dideklarasikan lewat "type ..."
+		tok := p.advance()
+		return &ast.Type{Name: tok.Literal}, nil
 	default:
 		return nil, p.errf(p.cur(), "diharapkan nama tipe data, ditemukan %s (%q)", tokTypeName(p.cur().Type), p.cur().Literal)
 	}
@@ -447,6 +506,36 @@ func (p *Parser) parseStmtList() ([]ast.Stmt, error) {
 		stmts = append(stmts, stmt)
 	}
 	return stmts, nil
+}
+
+// parseLValueChain membangun rangkaian [index] dan .field setelah sebuah
+// identifier awal -- dipakai baik untuk target assignment maupun ekspresi.
+func (p *Parser) parseLValueChain(base ast.Expr) (ast.Expr, error) {
+	for {
+		if p.cur().Type == lexer.LBRACKET {
+			p.advance()
+			idx, err := p.parseExpr()
+			if err != nil {
+				return nil, err
+			}
+			if _, err := p.expect(lexer.RBRACKET); err != nil {
+				return nil, err
+			}
+			base = &ast.IndexExpr{Array: base, Index: idx}
+			continue
+		}
+		if p.cur().Type == lexer.DOT {
+			p.advance()
+			fieldTok, err := p.expect(lexer.IDENT)
+			if err != nil {
+				return nil, err
+			}
+			base = &ast.FieldAccessExpr{Base: base, Field: fieldTok.Literal}
+			continue
+		}
+		break
+	}
+	return base, nil
 }
 
 func (p *Parser) parseStmt() (ast.Stmt, error) {
@@ -508,17 +597,9 @@ func (p *Parser) parseStmt() (ast.Stmt, error) {
 			}
 			return &ast.CallStmt{Name: nameTok.Literal, Args: args}, nil
 		}
-		var target ast.Expr = &ast.Ident{Name: nameTok.Literal}
-		for p.cur().Type == lexer.LBRACKET {
-			p.advance()
-			idx, err := p.parseExpr()
-			if err != nil {
-				return nil, err
-			}
-			if _, err := p.expect(lexer.RBRACKET); err != nil {
-				return nil, err
-			}
-			target = &ast.IndexExpr{Array: target, Index: idx}
+		target, err := p.parseLValueChain(&ast.Ident{Name: nameTok.Literal})
+		if err != nil {
+			return nil, err
 		}
 		if _, err := p.expect(lexer.ASSIGN); err != nil {
 			return nil, err
@@ -535,7 +616,7 @@ func (p *Parser) parseStmt() (ast.Stmt, error) {
 }
 
 func (p *Parser) parseIfStmt() (ast.Stmt, error) {
-	p.advance() // if
+	p.advance()
 	cond, err := p.parseExpr()
 	if err != nil {
 		return nil, err
@@ -573,17 +654,14 @@ func (p *Parser) parseIfStmt() (ast.Stmt, error) {
 		}
 		break
 	}
-	if _, err := p.expect(lexer.END); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.IF); err != nil {
+	if err := p.expectBlockEnd(lexer.ENDIF, lexer.IF); err != nil {
 		return nil, err
 	}
 	return &ast.IfStmt{Cond: cond, Then: thenBody, ElseIfs: elseIfs, Else: elseBody}, nil
 }
 
 func (p *Parser) parseForStmt() (ast.Stmt, error) {
-	p.advance() // for
+	p.advance()
 	varTok, err := p.expect(lexer.IDENT)
 	if err != nil {
 		return nil, err
@@ -609,17 +687,14 @@ func (p *Parser) parseForStmt() (ast.Stmt, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.END); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.FOR); err != nil {
+	if err := p.expectBlockEnd(lexer.ENDFOR, lexer.FOR); err != nil {
 		return nil, err
 	}
 	return &ast.ForStmt{Var: varTok.Literal, From: from, To: to, Body: body}, nil
 }
 
 func (p *Parser) parseWhileStmt() (ast.Stmt, error) {
-	p.advance() // while
+	p.advance()
 	cond, err := p.parseExpr()
 	if err != nil {
 		return nil, err
@@ -631,17 +706,14 @@ func (p *Parser) parseWhileStmt() (ast.Stmt, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := p.expect(lexer.END); err != nil {
-		return nil, err
-	}
-	if _, err := p.expect(lexer.WHILE); err != nil {
+	if err := p.expectBlockEnd(lexer.ENDWHILE, lexer.WHILE); err != nil {
 		return nil, err
 	}
 	return &ast.WhileStmt{Cond: cond, Body: body}, nil
 }
 
 func (p *Parser) parseRepeatStmt() (ast.Stmt, error) {
-	p.advance() // repeat
+	p.advance()
 	body, err := p.parseStmtList()
 	if err != nil {
 		return nil, err
@@ -656,7 +728,7 @@ func (p *Parser) parseRepeatStmt() (ast.Stmt, error) {
 	return &ast.RepeatStmt{Body: body, Until: cond}, nil
 }
 
-// ---- Expressions (precedence climbing) ----
+// ---- Expressions ----
 
 func (p *Parser) parseExprListUntilRParen() ([]ast.Expr, error) {
 	var args []ast.Expr
@@ -871,19 +943,7 @@ func (p *Parser) parsePrimary() (ast.Expr, error) {
 			}
 			return &ast.CallExpr{Name: tok.Literal, Args: args}, nil
 		}
-		var e ast.Expr = &ast.Ident{Name: tok.Literal}
-		for p.cur().Type == lexer.LBRACKET {
-			p.advance()
-			idx, err := p.parseExpr()
-			if err != nil {
-				return nil, err
-			}
-			if _, err := p.expect(lexer.RBRACKET); err != nil {
-				return nil, err
-			}
-			e = &ast.IndexExpr{Array: e, Index: idx}
-		}
-		return e, nil
+		return p.parseLValueChain(&ast.Ident{Name: tok.Literal})
 
 	default:
 		return nil, p.errf(tok, "diharapkan sebuah ekspresi, ditemukan %s (%q)", tokTypeName(tok.Type), tok.Literal)

@@ -45,6 +45,7 @@ export class ConverterPage {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.stdinInput.set('');
+    this.runOutput.set('');
     this.converter.convert(this.pseudocode()).subscribe({
       next: (result) => {
         this.goCode.set(result);

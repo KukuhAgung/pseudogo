@@ -1,4 +1,7 @@
-procedure InsertionSort(inout arr : array [1..N] of integer, in N : integer)
+constant NMAX : integer = 6
+type arr_int : array [1..NMAX] of integer
+
+procedure InsertionSort(inout arr : arr_int, in N : integer)
 Kamus:
     i, j, temp : integer
 Algoritma:
@@ -17,7 +20,7 @@ end procedure
 
 Program TestInsertionSort
 Kamus:
-    data : array [1..6] of integer
+    data : arr_int
     i : integer
 Algoritma:
     data[1] <- 9

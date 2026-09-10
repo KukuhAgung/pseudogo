@@ -38,10 +38,10 @@ type FuncSig struct {
 
 type genContext struct {
 	sigTable         map[string]*FuncSig
-	typeReg          map[string]*ast.TypeDecl 
-	constants        map[string]int         
-	globalConstDecls []*ast.Declaration      
-	maxSize          int                     
+	typeReg          map[string]*ast.TypeDecl
+	constants        map[string]int
+	globalConstDecls []*ast.Declaration
+	maxSize          int
 }
 
 func buildSigTable(f *ast.File) map[string]*FuncSig {
@@ -352,7 +352,6 @@ func genStmt(s ast.Stmt, sc *Scope, ctx *genContext, tempCounter *int) string {
 			}
 			parts = append(parts, code)
 		}
-		parts = append(parts, `"\n"`)
 		return "fmt.Print(" + strings.Join(parts, ", ") + ")"
 
 	case *ast.IfStmt:

@@ -15,8 +15,8 @@ Algoritma:
         end while
 
         arr[j + 1] <- temp
-    end for
-end procedure
+    endfor
+endprocedure
 
 Program TestInsertionSort
 Kamus:
@@ -31,5 +31,5 @@ Algoritma:
     data[6] <- 7
     InsertionSort(data, 6)
     for i <- 1 to 6 do
-        output("data[", i, "] = ", data[i])
-    end for
+        output("data[", i, "] = ", data[i], "\n")
+    endfor

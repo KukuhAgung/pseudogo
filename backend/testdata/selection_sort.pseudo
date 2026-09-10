@@ -10,14 +10,14 @@ Algoritma:
         for j <- i + 1 to N do
             if (arr[j] < arr[minIdx]) then
                 minIdx <- j
-            end if
-        end for
+            endif
+        endfor
 
         temp <- arr[i]
         arr[i] <- arr[minIdx]
         arr[minIdx] <- temp
-    end for
-end procedure
+    endfor
+endprocedure
 
 Program TestSelectionSort
 Kamus:
@@ -32,5 +32,5 @@ Algoritma:
     data[6] <- 90
     SelectionSort(data, 6)
     for i <- 1 to 6 do
-        output("data[", i, "] = ", data[i])
-    end for
+        output("data[", i, "] = ", data[i], "\n")
+    endfor

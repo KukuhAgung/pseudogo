@@ -25,16 +25,18 @@ export class Converter {
   private http = inject(HttpClient);
 
   convert(pseudocode: string): Observable<string> {
-    return this.http.post<ConvertResponse>('http://localhost:8080/convert', { pseudocode }).pipe(
-      map((res) => {
-        if (res.error) throw new Error(res.error);
-        return res.go_code ?? '';
-      }),
-    );
+    return this.http
+      .post<ConvertResponse>('http://192.168.18.15:8080/convert', { pseudocode })
+      .pipe(
+        map((res) => {
+          if (res.error) throw new Error(res.error);
+          return res.go_code ?? '';
+        }),
+      );
   }
 
   run(pseudocode: string, input: string): Observable<RunResult> {
-    return this.http.post<RunResponse>('http://localhost:8080/run', { pseudocode, input }).pipe(
+    return this.http.post<RunResponse>('http://192.168.18.15:8080/run', { pseudocode, input }).pipe(
       map((res) => {
         if (res.error) throw new Error(res.error);
         return {

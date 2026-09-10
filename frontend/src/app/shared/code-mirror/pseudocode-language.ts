@@ -14,6 +14,7 @@ const PSEUDOCODE_KEYWORDS = new Set([
   'string',
   'array',
   'of',
+  'type',
   'input',
   'output',
   'if',
@@ -39,6 +40,11 @@ const PSEUDOCODE_KEYWORDS = new Set([
   'mod',
   'true',
   'false',
+  'endif',
+  'endfor',
+  'endwhile',
+  'endprocedure',
+  'endfunction',
 ]);
 
 export const pseudocodeLanguage = StreamLanguage.define({
@@ -59,7 +65,6 @@ export const pseudocodeLanguage = StreamLanguage.define({
   },
 });
 
-
 export const fixedDarkHighlight = HighlightStyle.define([
   { tag: t.keyword, color: '#c084fc' },
   { tag: t.string, color: '#86efac' },
@@ -70,7 +75,6 @@ export const fixedDarkHighlight = HighlightStyle.define([
   { tag: t.function(t.variableName), color: '#60a5fa' },
   { tag: t.typeName, color: '#60a5fa' },
 ]);
-
 
 export const adaptiveHighlight = HighlightStyle.define([
   { tag: t.keyword, color: 'var(--color-syntax-keyword)' },

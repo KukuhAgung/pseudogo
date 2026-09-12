@@ -1,11 +1,19 @@
 package httpapi
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /convert", ConvertHandler)
-	mux.HandleFunc("POST /run", RunHandler)
+
+	convertLimiter := newRateLimiter(20, time.Minute)
+	runLimiter := newRateLimiter(6, time.Minute)
+
+	mux.Handle("POST /convert", rateLimitMiddleware(http.HandlerFunc(ConvertHandler), convertLimiter))
+	mux.Handle("POST /run", rateLimitMiddleware(http.HandlerFunc(RunHandler), runLimiter))
+
 	return withCORS(mux)
 }
 

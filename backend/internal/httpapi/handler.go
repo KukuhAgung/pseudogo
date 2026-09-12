@@ -2,14 +2,16 @@ package httpapi
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
-	"pseudogo/internal/sandbox"
 	"pseudogo/internal/codegen"
 	"pseudogo/internal/parser"
+	"pseudogo/internal/sandbox"
 )
 
 func ConvertHandler(w http.ResponseWriter, r *http.Request) {
 	var req ConvertRequest
+	r.Body = http.MaxBytesReader(w, r.Body, 100*1024)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeJSON(w, http.StatusBadRequest, ConvertResponse{Error: "request body tidak valid"})
 		return
@@ -23,7 +25,8 @@ func ConvertHandler(w http.ResponseWriter, r *http.Request) {
 
 	goCode, err := codegen.Generate(file)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, ConvertResponse{Error: err.Error()})
+		log.Printf("codegen error: %v", err)
+		writeJSON(w, http.StatusInternalServerError, ConvertResponse{Error: "Terjadi kesalahan internal saat memproses kode. Coba lagi beberapa saat lagi."})
 		return
 	}
 
@@ -37,6 +40,8 @@ func writeJSON(w http.ResponseWriter, status int, resp any) {
 }
 
 func RunHandler(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, 100*1024)
+
 	var req RunRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeJSON(w, http.StatusBadRequest, RunResponse{Error: "request body tidak valid"})
@@ -51,13 +56,15 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	goCode, err := codegen.Generate(file)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, RunResponse{Error: err.Error()})
+		log.Printf("codegen error: %v", err)
+		writeJSON(w, http.StatusInternalServerError, RunResponse{Error: "Terjadi kesalahan internal saat memproses kode. Coba lagi beberapa saat lagi."})
 		return
 	}
 
 	result, err := sandbox.RunGoCode(goCode, req.Input)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, RunResponse{Error: "gagal menjalankan kode: " + err.Error()})
+		log.Printf("sandbox error: %v", err)
+		writeJSON(w, http.StatusInternalServerError, RunResponse{Error: "Terjadi kesalahan pada server saat menjalankan program. Coba lagi beberapa saat lagi."})
 		return
 	}
 

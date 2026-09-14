@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { CodeBlock } from '../../../../shared/components/code-block/code-block';
-import { remixCodeBoxLine, remixTerminalWindowLine, remixArrowRightSLine } from '@ng-icons/remixicon';
+import { remixCodeBoxLine, remixTerminalWindowLine, remixArrowRightSLine, remixArrowLeftSLine } from '@ng-icons/remixicon';
 
 @Component({
   imports: [CodeBlock, NgIcon, RouterLink],
-  providers: [provideIcons({ remixArrowRightSLine, remixCodeBoxLine, remixTerminalWindowLine })],
+  providers: [provideIcons({ remixArrowRightSLine, remixArrowLeftSLine, remixCodeBoxLine, remixTerminalWindowLine })],
   selector: 'app-io',
   styleUrl: './io.css',
   templateUrl: './io.html',

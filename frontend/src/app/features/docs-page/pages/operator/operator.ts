@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { CodeBlock } from '../../../../shared/components/code-block/code-block';
 import {
+  remixArrowLeftSLine,
   remixCodeBoxLine,
   remixTerminalWindowLine,
   remixArrowRightSLine,
@@ -10,7 +11,14 @@ import {
 
 @Component({
   imports: [NgIcon, CodeBlock, RouterLink],
-  providers: [provideIcons({ remixCodeBoxLine, remixTerminalWindowLine, remixArrowRightSLine })],
+  providers: [
+    provideIcons({
+      remixArrowLeftSLine,
+      remixCodeBoxLine,
+      remixTerminalWindowLine,
+      remixArrowRightSLine,
+    }),
+  ],
   selector: 'app-operator',
   styleUrl: './operator.css',
   templateUrl: './operator.html',

@@ -3,15 +3,22 @@ import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { CodeBlock } from '../../../../shared/components/code-block/code-block';
 import {
+  remixArrowLeftSLine,
   remixCodeBoxLine,
   remixTerminalWindowLine,
   remixArrowRightSLine,
 } from '@ng-icons/remixicon';
 
-
 @Component({
   imports: [NgIcon, CodeBlock, RouterLink],
-  providers: [provideIcons({ remixCodeBoxLine, remixTerminalWindowLine, remixArrowRightSLine })],
+  providers: [
+    provideIcons({
+      remixArrowLeftSLine,
+      remixCodeBoxLine,
+      remixTerminalWindowLine,
+      remixArrowRightSLine,
+    }),
+  ],
   selector: 'app-looping',
   styleUrl: './looping.css',
   templateUrl: './looping.html',

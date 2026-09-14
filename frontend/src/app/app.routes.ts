@@ -7,6 +7,7 @@ import { Io } from './features/docs-page/pages/io/io';
 import { Operator } from './features/docs-page/pages/operator/operator';
 import { ConditionalStatements } from './features/docs-page/pages/conditional-statements/conditional-statements';
 import { Looping } from './features/docs-page/pages/looping/looping';
+import { Dictionary } from './features/docs-page/pages/dictionary/dictionary';
 
 export const routes: Routes = [
   { path: '', component: ConverterPage },
@@ -16,6 +17,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'introduction', pathMatch: 'full' },
       { path: 'introduction', component: Introduction },
+      { path: 'dictionary', component: Dictionary },
       { path: 'variable', component: Variable },
       { path: 'input-output', component: Io },
       { path: 'operators', component: Operator },

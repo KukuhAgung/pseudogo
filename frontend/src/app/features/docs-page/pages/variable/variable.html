@@ -131,7 +131,24 @@
     </section>
 
     <!-- 5. Footer Navigasi -->
-    <div class="flex justify-end pt-8 border-t border-line mt-16">
+    <div class="flex justify-between items-center pt-8 border-t border-line mt-16">
+      <a
+        routerLink="/docs/dictionary"
+        class="group flex flex-col items-start px-6 py-4 rounded-2xl border border-line hover:border-line-strong bg-bg-0 hover:bg-bg-weak cursor-pointer"
+      >
+        <span
+          class="text-[13px] font-medium text-sub mb-1 group-hover:text-strong transition-colors"
+          >Sebelumnya</span
+        >
+        <span class="text-strong font-semibold flex items-center gap-2 text-base">
+          <ng-icon
+            name="remixArrowLeftSLine"
+            class="text-xl group-hover:-translate-x-1 transition-transform"
+          />
+          Penulisan Kamus
+        </span>
+      </a>
+
       <a
         routerLink="/docs/input-output"
         class="group flex flex-col items-end px-6 py-4 rounded-2xl border border-line hover:border-line-strong bg-bg-0 hover:bg-bg-weak cursor-pointer"
@@ -148,6 +165,5 @@
           />
         </span>
       </a>
-    </div>
   </div>
 </div>

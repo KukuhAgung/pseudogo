@@ -1,15 +1,20 @@
 package sandbox
 
 import (
+	"os"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 )
 
-const pistonURL = "http://localhost:2000/api/v2/execute"
+func pistonURL() string {
+	if url := os.Getenv("PISTON_URL"); url != "" {
+		return url
+	}
+	return "http://localhost:2000/api/v2/execute"
+}
 
 type pistonFile struct {
 	Content string `json:"content"`
@@ -57,17 +62,16 @@ func RunGoCode(goSource string, stdinInput string) (*RunResult, error) {
 		RunCPUTime:     15000,
 		RunMemoryLimit: 67108864,
 	})
-	
-	client := &http.Client{Timeout: 25 * time.Second}
-	resp, err := client.Post(pistonURL, "application/json", bytes.NewReader(body))
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Post(pistonURL(), "application/json", bytes.NewReader(body)) // <-- pistonURL() jadi fungsi, bukan konstanta
 	if err != nil {
 		return nil, fmt.Errorf("gagal menghubungi Piston: %w", err)
 	}
 	defer resp.Body.Close()
 
-	respBytes, _ := io.ReadAll(resp.Body)
 	var result pistonResponse
-	if err := json.Unmarshal(respBytes, &result); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, fmt.Errorf("gagal baca respons Piston: %w", err)
 	}
 	if result.Message != "" {

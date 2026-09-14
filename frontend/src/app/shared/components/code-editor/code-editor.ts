@@ -102,6 +102,7 @@ export class CodeEditor {
   }
 
   private initEditor() {
+    const isReadOnly = this.language() === 'go';
     const langExtension = this.language() === 'go' ? go() : pseudocodeLanguage;
     const smartEnter = keymap.of([
       {
@@ -129,6 +130,8 @@ export class CodeEditor {
         keymap.of([indentWithTab, ...defaultKeymap]),
         smartEnter,
         modernTheme,
+        EditorState.readOnly.of(isReadOnly),
+        EditorView.editable.of(!isReadOnly),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) this.value.set(update.state.doc.toString());
         }),

@@ -1,4 +1,5 @@
 /packages/go/1.16.2
 /piston-data/packages/go/1.16.2
+/piston
 
 .test-pseudogo.jpeg

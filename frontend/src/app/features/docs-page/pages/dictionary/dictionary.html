@@ -1,0 +1,268 @@
+<div class="flex items-start animate-fade-in pb-16">
+  <div class="min-w-0 flex-1">
+    <!-- 1. Header Section -->
+    <header class="text-soft flex flex-wrap items-center gap-2 text-[13px] font-medium">
+      <span>Dokumentasi</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span>Struktur Program</span>
+      <ng-icon name="remixArrowRightSLine" class="text-[14px]" />
+      <span class="text-strong">Kamus</span>
+    </header>
+
+    <h1 id="kamus"
+      class="mob:text-[40px] mt-4 text-[30px] font-semibold tracking-[-0.03em] text-balance text-strong"
+    >
+      Kamus
+    </h1>
+
+    <p class="text-sub mob:text-[17px] mt-3.5 text-base leading-7 text-pretty">
+      Selain <em>Kamus</em> lokal yang dideklarasikan di dalam blok
+      <code class="text-primary font-semibold bg-primary-weak px-1.5 py-0.5 rounded text-[13px] border border-primary-line">Program</code>,
+      pseudocode di aplikasi ini juga mendukung <em>Kamus Global</em> yang dideklarasikan di
+      luar dan sebelum program utama. Bagian ini membahas apa saja yang boleh dideklarasikan
+      secara global serta urutan penulisannya yang baku.
+    </p>
+
+    <hr class="my-8 border-line" />
+
+    <!-- 2. Deklarasi Kamus Global -->
+    <section class="space-y-6">
+      <h2 id="deklarasi-kamus-global" class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Deklarasi Kamus Global
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Kamus Global dideklarasikan di <em>top level</em>, sebelum blok
+        <code class="text-primary font-semibold bg-primary-weak px-1.5 py-0.5 rounded text-[13px] border border-primary-line">Program</code>
+        dimulai. Isinya dapat diakses oleh Fungsi, Procedure, maupun Program utama. Ada tiga
+        jenis deklarasi yang didukung:
+      </p>
+
+      <ul class="space-y-6 text-sub leading-7 mt-6">
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >1</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >constant</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mendeklarasikan nilai tetap yang tidak dapat diubah selama program berjalan.
+              <br/>Contoh: <code class="text-strong font-medium">constant NMAX int = 10</code>.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >2</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >type ... struct</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mendefinisikan tipe data bentukan (composite type) yang terdiri dari beberapa
+              isi/field dengan tipe data masing-masing.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >3</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >type ... array</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Mendefinisikan alias tipe untuk kumpulan data sejenis (array) berdasarkan
+              ukuran dan tipe elemen yang sudah ditentukan, termasuk tipe struct di atas.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Blok Pseudocode -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div
+            class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5"
+          >
+            <ng-icon name="remixCodeBoxLine" class="text-sub text-lg" /> Pseudocode
+          </div>
+          <app-code-block
+            [code]="globalPseudocodeExample"
+            language="pseudocode"
+            class="flex-1"
+          ></app-code-block>
+        </div>
+
+        <!-- Blok Golang -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div
+            class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5"
+          >
+            <ng-icon name="remixTerminalWindowLine" class="text-accent-green text-lg" /> Golang
+          </div>
+          <app-code-block [code]="globalGolangExample" language="go" class="flex-1"></app-code-block>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-line bg-bg-weak p-5 mt-6">
+        <p class="text-sub text-[15px] leading-7 text-pretty">
+          <span class="text-strong font-semibold">Catatan:</span> Nama tipe struct dan array
+          yang dideklarasikan di Kamus Global bersifat global dan dapat langsung dipakai
+          sebagai tipe data di dalam Kamus lokal milik Fungsi, Procedure, maupun Program.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Urutan Struktur Program -->
+    <section class="mt-14 space-y-6">
+      <h2 id="urutan-struktur-program" class="mob:text-[28px] text-[24px] font-semibold tracking-tight text-strong text-balance">
+        Urutan Struktur Program
+      </h2>
+      <p class="text-sub mob:text-[17px] text-base leading-7 text-pretty">
+        Setelah Kamus Global dideklarasikan, urutan penulisan blok pada satu berkas
+        pseudocode wajib mengikuti tahapan berikut, dari atas ke bawah:
+      </p>
+
+      <ul class="space-y-6 text-sub leading-7 mt-6">
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >1</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >Kamus Global</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Deklarasi <code class="text-strong font-medium">constant</code> dan
+              <code class="text-strong font-medium">type</code> yang berlaku untuk seluruh
+              berkas, ditulis paling atas.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >2</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >Fungsi</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Kumpulan definisi fungsi yang mengembalikan nilai, ditulis setelah Kamus
+              Global dan sebelum Procedure.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >3</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >Procedure</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Kumpulan definisi prosedur (tanpa nilai balik), ditulis setelah seluruh Fungsi
+              dan sebelum Program utama.
+            </p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span
+            class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-bg-weak border border-line text-xs font-bold text-strong mt-0.5"
+            >4</span
+          >
+          <div>
+            <code
+              class="text-primary font-semibold bg-primary-weak px-2 py-1 rounded-md text-[13px] border border-primary-line"
+              >Program [NamaProgram] ... endprogram</code
+            >
+            <p class="mt-2.5 text-pretty text-[15px] mob:text-base">
+              Blok terakhir dan wajib ada satu kali, berisi Kamus lokal dan Algoritma utama
+              yang menjalankan program.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Blok Pseudocode -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div
+            class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5"
+          >
+            <ng-icon name="remixCodeBoxLine" class="text-sub text-lg" /> Pseudocode
+          </div>
+          <app-code-block
+            [code]="pseudocodeExample"
+            language="pseudocode"
+            class="flex-1"
+          ></app-code-block>
+        </div>
+
+        <!-- Blok Golang -->
+        <div class="rounded-xl border border-line overflow-hidden shadow-sm flex flex-col bg-bg-0">
+          <div
+            class="bg-bg-weak px-5 py-3.5 text-[13px] font-semibold text-strong border-b border-line flex items-center gap-2.5"
+          >
+            <ng-icon name="remixTerminalWindowLine" class="text-accent-green text-lg" /> Golang
+          </div>
+          <app-code-block [code]="golangExample" language="go" class="flex-1"></app-code-block>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Footer Navigasi -->
+    <div class="flex justify-between items-center pt-8 border-t border-line mt-16">
+      <a
+        routerLink="/docs/introduction"
+        class="group flex flex-col items-start px-6 py-4 rounded-2xl border border-line hover:border-line-strong bg-bg-0 hover:bg-bg-weak cursor-pointer"
+      >
+        <span
+          class="text-[13px] font-medium text-sub mb-1 group-hover:text-strong transition-colors"
+          >Sebelumnya</span
+        >
+        <span class="text-strong font-semibold flex items-center gap-2 text-base">
+          <ng-icon
+            name="remixArrowLeftSLine"
+            class="text-xl group-hover:-translate-x-1 transition-transform"
+          />
+          Pengenalan
+        </span>
+      </a>
+
+      <a
+        routerLink="/docs/variable"
+        class="group flex flex-col items-end px-6 py-4 rounded-2xl border border-line hover:border-line-strong bg-bg-0 hover:bg-bg-weak cursor-pointer"
+      >
+        <span
+          class="text-[13px] font-medium text-sub mb-1 group-hover:text-strong transition-colors"
+          >Selanjutnya</span
+        >
+        <span class="text-strong font-semibold flex items-center gap-2 text-base">
+          Variabel & Tipe Data
+          <ng-icon
+            name="remixArrowRightSLine"
+            class="text-xl group-hover:translate-x-1 transition-transform"
+          />
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

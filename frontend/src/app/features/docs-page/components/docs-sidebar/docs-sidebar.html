@@ -1,9 +1,7 @@
 <nav class="h-[90vh] p-6 flex flex-col font-sans text-sm gap-8">
   <div>
     <div class="flex items-center justify-between mb-3 md:mb-5">
-      <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider">
-        Getting Started
-      </h3>
+      <h3 class="font-semibold text-[11px] text-sub uppercase tracking-wider">Getting Started</h3>
 
       <button
         (click)="ui.toggleSidebarDocs()"
@@ -22,6 +20,16 @@
         class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
       >
         Pengenalan
+      </a>
+    </div>
+    <div class="border-l border-line flex flex-col">
+      <a
+        routerLink="/docs/dictionary"
+        routerLinkActive="border-strong text-primary font-semibold"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="block border-l -ml-px border-transparent text-sub hover:border-line-strong hover:text-strong pl-4 py-2 transition-all duration-200 cursor-pointer"
+      >
+        Penulisan Kamus
       </a>
     </div>
   </div>

@@ -1,12 +1,24 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { remixArrowRightSLine, remixCodeBoxLine, remixTerminalWindowLine } from '@ng-icons/remixicon';
+import {
+  remixArrowRightSLine,
+  remixCodeBoxLine,
+  remixTerminalWindowLine,
+  remixArrowLeftSLine,
+} from '@ng-icons/remixicon';
 import { CodeBlock } from '../../../../shared/components/code-block/code-block';
 
 @Component({
   imports: [NgIcon, CodeBlock, RouterLink],
-  providers: [provideIcons({ remixArrowRightSLine, remixCodeBoxLine, remixTerminalWindowLine })],
+  providers: [
+    provideIcons({
+      remixArrowRightSLine,
+      remixCodeBoxLine,
+      remixTerminalWindowLine,
+      remixArrowLeftSLine,
+    }),
+  ],
   selector: 'app-variable',
   styleUrl: './variable.css',
   templateUrl: './variable.html',
